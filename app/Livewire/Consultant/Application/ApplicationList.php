@@ -22,6 +22,19 @@ class ApplicationList extends Component
         $this->resetPage();
     }
 
+    public function withdraw(int $applicationId): void
+    {
+        $application = Application::query()
+            ->where('id', $applicationId)
+            ->where('consultant_id', Auth::id())
+            ->where('status', ApplicationStatus::Pending)
+            ->first();
+
+        if ($application) {
+            $application->delete();
+        }
+    }
+
     public function render(): View
     {
         $applications = Application::query()

@@ -115,12 +115,22 @@
                             </div>
                         @endif
 
-                        <div class="mt-4">
+                        <div class="mt-4 flex items-center justify-between">
                             <a href="{{ route('consultant.missions.show', $application->mission) }}" wire:navigate
                                 class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
                                 {{ __('Voir la mission') }}
                                 <x-heroicon-m-arrow-right class="ml-1 h-4 w-4" />
                             </a>
+
+                            {{-- Withdraw button only for pending applications --}}
+                            @if($application->status === \App\Enums\ApplicationStatus::Pending)
+                                <button type="button" wire:click="withdraw({{ $application->id }})" wire:loading.attr="disabled"
+                                    wire:confirm="{{ __('Êtes-vous sûr de vouloir retirer votre candidature ?') }}"
+                                    class="inline-flex items-center rounded-md bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50">
+                                    <x-heroicon-m-x-mark class="w-4 h-4 mr-1" />
+                                    {{ __('Retirer ma candidature') }}
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>

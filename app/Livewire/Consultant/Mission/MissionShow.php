@@ -54,6 +54,27 @@ class MissionShow extends Component
         $this->dispatch('application-submitted');
     }
 
+    public function withdraw(): void
+    {
+        $application = $this->existingApplication;
+
+        if (! $application) {
+            return;
+        }
+
+        // Only allow withdrawal for pending applications
+        if ($application->status !== ApplicationStatus::Pending) {
+            return;
+        }
+
+        $application->delete();
+
+        unset($this->existingApplication);
+        unset($this->hasApplied);
+
+        $this->dispatch('application-withdrawn');
+    }
+
     public function render(): View
     {
         return view('livewire.consultant.mission.mission-show');

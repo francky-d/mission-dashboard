@@ -270,3 +270,109 @@ it('displays rejected application status', function () {
         ->test(MissionShow::class, ['mission' => $mission])
         ->assertSee('Refusé');
 });
+
+// Withdraw Application Tests
+
+it('can withdraw a pending application', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    $application = Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Pending,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->assertSee('Retirer')
+        ->call('withdraw')
+        ->assertDispatched('application-withdrawn');
+
+    expect(Application::find($application->id))->toBeNull();
+});
+
+it('displays withdraw button only for pending applications', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Pending,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->assertSee('Retirer');
+});
+
+it('does not display withdraw button for viewed applications', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Viewed,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->assertDontSee('Retirer');
+});
+
+it('does not display withdraw button for accepted applications', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Accepted,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->assertDontSee('Retirer');
+});
+
+it('cannot withdraw a non-pending application', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    $application = Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Viewed,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->call('withdraw');
+
+    // Application should still exist
+    expect(Application::find($application->id))->not->toBeNull();
+});
+
+it('can apply again after withdrawing', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Pending,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->call('withdraw')
+        ->assertSee('Postuler à cette mission')
+        ->call('apply')
+        ->assertSee('Candidature envoyée');
+
+    expect(Application::where('mission_id', $mission->id)
+        ->where('consultant_id', $consultant->id)
+        ->count())->toBe(1);
+});

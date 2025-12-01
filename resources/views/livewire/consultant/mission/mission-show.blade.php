@@ -30,6 +30,28 @@
         </div>
     </div>
 
+    {{-- Application Withdrawn Message --}}
+    <div x-data="{ show: false }"
+        x-on:application-withdrawn.window="show = true; setTimeout(() => show = false, 5000)"
+        x-show="show"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform translate-y-2"
+        x-transition:enter-end="opacity-100 transform translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 transform translate-y-0"
+        x-transition:leave-end="opacity-0 transform translate-y-2"
+        class="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/30"
+        x-cloak>
+        <div class="flex">
+            <x-heroicon-m-arrow-uturn-left class="h-5 w-5 text-yellow-400" />
+            <div class="ml-3">
+                <p class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                    {{ __('Votre candidature a été retirée.') }}
+                </p>
+            </div>
+        </div>
+    </div>
+
     {{-- En-tête de la mission --}}
     <div
         class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -145,6 +167,20 @@
                     <x-heroicon-m-check class="w-4 h-4 mr-1.5" />
                     {{ __('Candidature envoyée') }} - {{ $this->existingApplication->status->label() }}
                 </span>
+
+                {{-- Withdraw button only for pending applications --}}
+                @if($this->existingApplication->status === \App\Enums\ApplicationStatus::Pending)
+                    <button
+                        type="button"
+                        wire:click="withdraw"
+                        wire:loading.attr="disabled"
+                        wire:confirm="{{ __('Êtes-vous sûr de vouloir retirer votre candidature ?') }}"
+                        class="inline-flex items-center rounded-md bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+                    >
+                        <x-heroicon-m-x-mark class="w-4 h-4 mr-1" />
+                        {{ __('Retirer') }}
+                    </button>
+                @endif
             </div>
         @else
             <button type="button" wire:click="apply" wire:loading.attr="disabled"
