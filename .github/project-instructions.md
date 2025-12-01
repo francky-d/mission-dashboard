@@ -1,3 +1,35 @@
+# Introduction au Projet — Portail Interne ESN
+
+Dans une **ESN (Entreprise de Services du Numérique)**, la gestion des missions et des talents est souvent complexe. Les consultants sont régulièrement mis à disposition des clients, tandis que les commerciaux doivent identifier rapidement les profils adaptés à chaque projet.
+
+Ce projet vise à créer un **portail interne**, semblable à un mini LinkedIn, qui centralise la gestion des missions et des candidatures pour une ESN. L’objectif est de faciliter la **mise en relation entre consultants et commerciaux**, tout en donnant à l’administrateur une vue complète sur l’activité de la plateforme.
+
+---
+
+## Objectifs principaux
+
+1. **Simplifier la diffusion des missions**
+    - Les commerciaux peuvent poster des missions avec des tags (développeur, DevOps, IA, etc.).
+    - Les consultants reçoivent automatiquement une notification si une mission correspond à leurs compétences.
+
+2. **Optimiser le processus de candidature**
+    - Les consultants peuvent postuler facilement aux missions.
+    - Les commerciaux peuvent visualiser et filtrer les candidatures selon les compétences des consultants.
+
+3. **Renforcer la communication interne**
+    - Les notifications et la messagerie intégrée permettent des échanges rapides entre consultants et commerciaux.
+
+4. **Centraliser l’administration et le suivi**
+    - Les administrateurs ont un tableau de bord complet pour gérer utilisateurs, tags, missions et suivre l’activité globale.
+
+---
+
+## Acteurs de la plateforme
+
+1. **Consultants** : créent leur profil, postulent aux missions et reçoivent des notifications adaptées à leurs compétences.
+2. **Commerciaux** : publient des missions, consultent les candidatures et contactent les consultants qualifiés.
+3. **Administrateurs** : supervisent la plateforme, gèrent les utilisateurs et les tags, et consultent les statistiques d’activité.
+
 # # 📘 User Stories — Portail Interne ESN
 
 *(Consultants • Commerciaux • Admin)*
@@ -99,8 +131,8 @@ updated_at  TIMESTAMP
 
 Permet d’associer un tag à :
 
-* une mission
-* un consultant
+- une mission
+- un consultant
 
 ```sql
 taggables
