@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth', 'verified', 'consultant'])->prefix('consultant')->name('consultant.')->group(function () {
+    // Dashboard
+    Route::view('dashboard', 'consultant.dashboard')->name('dashboard');
+
     // Profil consultant
     Route::view('profile', 'consultant.profile')->name('profile');
 
