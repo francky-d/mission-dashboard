@@ -30,9 +30,43 @@ new class extends Component
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    @auth
+                        @if(auth()->user()->role === \App\Enums\UserRole::Commercial)
+                            <x-nav-link :href="route('commercial.dashboard')"
+                                :active="request()->routeIs('commercial.dashboard')" wire:navigate>
+                                {{ __('Dashboard') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('commercial.missions.index')"
+                                :active="request()->routeIs('commercial.missions.*')" wire:navigate>
+                                {{ __('Missions') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('commercial.messages.index')"
+                                :active="request()->routeIs('commercial.messages.*')" wire:navigate>
+                                {{ __('Messages') }}
+                            </x-nav-link>
+                        @else
+                            <x-nav-link :href="route('consultant.dashboard')"
+                                :active="request()->routeIs('consultant.dashboard')" wire:navigate>
+                                {{ __('Dashboard') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('consultant.missions.index')"
+                                :active="request()->routeIs('consultant.missions.*')" wire:navigate>
+                                {{ __('Missions') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('consultant.applications.index')"
+                                :active="request()->routeIs('consultant.applications.*')" wire:navigate>
+                                {{ __('Candidatures') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('consultant.messages.index')"
+                                :active="request()->routeIs('consultant.messages.*')" wire:navigate>
+                                {{ __('Messages') }}
+                            </x-nav-link>
+                        @endif
+                    @else
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    @endauth
                 </div>
             </div>
 
@@ -40,7 +74,11 @@ new class extends Component
             <div class="hidden sm:flex sm:items-center sm:ms-6 gap-2">
                 {{-- Notifications --}}
                 @auth
-                    <livewire:consultant.notification.notification-dropdown />
+                    @if(auth()->user()->role === \App\Enums\UserRole::Commercial)
+                        <livewire:commercial.notification.notification-dropdown />
+                    @else
+                        <livewire:consultant.notification.notification-dropdown />
+                    @endif
                 @endauth
 
                 <x-dropdown align="right" width="48">
@@ -62,9 +100,15 @@ new class extends Component
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile')" wire:navigate>
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                        @if(auth()->user()->role === \App\Enums\UserRole::Consultant)
+                            <x-dropdown-link :href="route('consultant.profile')" wire:navigate>
+                                {{ __('Mon profil') }}
+                            </x-dropdown-link>
+                        @else
+                            <x-dropdown-link :href="route('profile')" wire:navigate>
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+                        @endif
 
                         <!-- Authentication -->
                         <button wire:click="logout" class="w-full text-start">
@@ -95,9 +139,43 @@ new class extends Component
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
+            @auth
+                @if(auth()->user()->role === \App\Enums\UserRole::Commercial)
+                    <x-responsive-nav-link :href="route('commercial.dashboard')"
+                        :active="request()->routeIs('commercial.dashboard')" wire:navigate>
+                        {{ __('Dashboard') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('commercial.missions.index')"
+                        :active="request()->routeIs('commercial.missions.*')" wire:navigate>
+                        {{ __('Missions') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('commercial.messages.index')"
+                        :active="request()->routeIs('commercial.messages.*')" wire:navigate>
+                        {{ __('Messages') }}
+                    </x-responsive-nav-link>
+                @else
+                    <x-responsive-nav-link :href="route('consultant.dashboard')"
+                        :active="request()->routeIs('consultant.dashboard')" wire:navigate>
+                        {{ __('Dashboard') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('consultant.missions.index')"
+                        :active="request()->routeIs('consultant.missions.*')" wire:navigate>
+                        {{ __('Missions') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('consultant.applications.index')"
+                        :active="request()->routeIs('consultant.applications.*')" wire:navigate>
+                        {{ __('Candidatures') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('consultant.messages.index')"
+                        :active="request()->routeIs('consultant.messages.*')" wire:navigate>
+                        {{ __('Messages') }}
+                    </x-responsive-nav-link>
+                @endif
+            @else
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->
@@ -110,9 +188,15 @@ new class extends Component
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile')" wire:navigate>
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
+                @if(auth()->user()->role === \App\Enums\UserRole::Consultant)
+                    <x-responsive-nav-link :href="route('consultant.profile')" wire:navigate>
+                        {{ __('Mon profil') }}
+                    </x-responsive-nav-link>
+                @else
+                    <x-responsive-nav-link :href="route('profile')" wire:navigate>
+                        {{ __('Profile') }}
+                    </x-responsive-nav-link>
+                @endif
 
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">
