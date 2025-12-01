@@ -1,198 +1,154 @@
-<div class="space-y-6">
-    {{-- Stats Cards --}}
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {{-- Total Missions --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <x-heroicon-o-briefcase class="h-6 w-6 text-gray-400" />
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {{ __('Total missions') }}
-                            </dt>
-                            <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ $totalMissions }}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
+<div class="space-y-8">
+    {{-- Welcome Banner --}}
+    <div class="card-themed p-6 sm:p-8"
+        style="background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="text-white">
+                <h1 class="text-2xl font-bold">Bonjour, {{ auth()->user()->name }} 👋</h1>
+                <p class="mt-1 text-white/80">Gérez vos missions et suivez vos candidatures</p>
             </div>
-        </div>
-
-        {{-- Active Missions --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <x-heroicon-o-check-badge class="h-6 w-6 text-green-400" />
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {{ __('Missions actives') }}
-                            </dt>
-                            <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ $activeMissions }}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Pending Applications --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <x-heroicon-o-clock class="h-6 w-6 text-yellow-400" />
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {{ __('Candidatures en attente') }}
-                            </dt>
-                            <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ $pendingApplications }}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Total Applications --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <x-heroicon-o-users class="h-6 w-6 text-indigo-400" />
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {{ __('Total candidatures') }}
-                            </dt>
-                            <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ $totalApplications }}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
+            <a href="{{ route('commercial.missions.create') }}" wire:navigate
+                class="btn-secondary bg-white border-white text-white hover:bg-white/10">
+                <x-heroicon-o-plus class="w-4 h-4 mr-2" />
+                Créer une mission
+            </a>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    {{-- Stats Cards --}}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <x-heroicon-o-briefcase class="w-6 h-6" />
+            </div>
+            <div class="stat-value">{{ $totalMissions }}</div>
+            <div class="stat-label">Total missions</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <x-heroicon-o-check-badge class="w-6 h-6" />
+            </div>
+            <div class="stat-value">{{ $activeMissions }}</div>
+            <div class="stat-label">Missions actives</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <x-heroicon-o-clock class="w-6 h-6" />
+            </div>
+            <div class="stat-value">{{ $pendingApplications }}</div>
+            <div class="stat-label">Candidatures en attente</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <x-heroicon-o-users class="w-6 h-6" />
+            </div>
+            <div class="stat-value">{{ $totalApplications }}</div>
+            <div class="stat-label">Total candidatures</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {{-- Recent Applications --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+        <div class="card-themed">
             <div class="p-6">
-                <h3 class="text-base font-semibold text-gray-900 dark:text-white">
-                    {{ __('Dernières candidatures') }}
-                </h3>
-                <div class="mt-6 flow-root">
-                    @if($recentApplications->isEmpty())
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __('Aucune candidature récente.') }}
-                        </p>
-                    @else
-                        <ul role="list" class="-my-5 divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach($recentApplications as $application)
-                                <li class="py-4">
-                                    <div class="flex items-center space-x-4">
-                                        <div
-                                            class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0">
-                                            <span class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
-                                                {{ strtoupper(substr($application->consultant->name, 0, 1)) }}
-                                            </span>
-                                        </div>
-                                        <div class="min-w-0 flex-1">
-                                            <p class="truncate text-sm font-medium text-gray-900 dark:text-white">
-                                                {{ $application->consultant->name }}
-                                            </p>
-                                            <p class="truncate text-sm text-gray-500 dark:text-gray-400">
-                                                {{ $application->mission->title }}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <span @class([
-                                                'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
-                                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' => $application->status === \App\Enums\ApplicationStatus::Pending,
-                                                'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' => $application->status === \App\Enums\ApplicationStatus::Viewed,
-                                                'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' => $application->status === \App\Enums\ApplicationStatus::Accepted,
-                                                'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' => $application->status === \App\Enums\ApplicationStatus::Rejected,
-                                            ])>
-                                                {{ $application->status->label() }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
+                <div class="section-header">
+                    <h3 class="section-title">Dernières candidatures</h3>
                 </div>
+                @if($recentApplications->isEmpty())
+                    <div class="empty-state py-8">
+                        <div class="empty-state-icon">
+                            <x-heroicon-o-users class="w-8 h-8" />
+                        </div>
+                        <p class="text-gray-500">Aucune candidature récente</p>
+                    </div>
+                @else
+                    <div class="space-y-4">
+                        @foreach($recentApplications as $application)
+                            <div
+                                class="flex items-center gap-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+                                <div class="avatar">
+                                    {{ strtoupper(substr($application->consultant->name, 0, 1)) }}
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-medium text-gray-900 truncate">{{ $application->consultant->name }}</p>
+                                    <p class="text-sm text-gray-500 truncate">{{ $application->mission->title }}</p>
+                                </div>
+                                <span @class([
+                                    'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium',
+                                    'bg-yellow-100 text-yellow-800' => $application->status === \App\Enums\ApplicationStatus::Pending,
+                                    'bg-blue-100 text-blue-800' => $application->status === \App\Enums\ApplicationStatus::Viewed,
+                                    'bg-green-100 text-green-800' => $application->status === \App\Enums\ApplicationStatus::Accepted,
+                                    'bg-red-100 text-red-800' => $application->status === \App\Enums\ApplicationStatus::Rejected,
+                                ])>
+                                    {{ $application->status->label() }}
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
 
         {{-- Recent Missions --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+        <div class="card-themed">
             <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-base font-semibold text-gray-900 dark:text-white">
-                        {{ __('Mes missions récentes') }}
-                    </h3>
-                    <a href="{{ route('commercial.missions.create') }}" wire:navigate
-                        class="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
-                        {{ __('Créer') }}
+                <div class="section-header">
+                    <h3 class="section-title">Mes missions récentes</h3>
+                    <a href="{{ route('commercial.missions.create') }}" wire:navigate class="link-themed text-sm">
+                        + Créer
                     </a>
                 </div>
-                <div class="mt-6 flow-root">
-                    @if($recentMissions->isEmpty())
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __('Aucune mission créée.') }}
-                        </p>
-                    @else
-                        <ul role="list" class="-my-5 divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach($recentMissions as $mission)
-                                <li class="py-4">
-                                    <div class="flex items-center justify-between">
-                                        <div class="min-w-0 flex-1">
-                                            <a href="{{ route('commercial.missions.show', $mission) }}" wire:navigate
-                                                class="truncate text-sm font-medium text-gray-900 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400">
-                                                {{ $mission->title }}
-                                            </a>
-                                            <p class="truncate text-sm text-gray-500 dark:text-gray-400">
+                @if($recentMissions->isEmpty())
+                    <div class="empty-state py-8">
+                        <div class="empty-state-icon">
+                            <x-heroicon-o-briefcase class="w-8 h-8" />
+                        </div>
+                        <p class="text-gray-500">Aucune mission créée</p>
+                        <a href="{{ route('commercial.missions.create') }}" wire:navigate class="btn-primary mt-4">
+                            Créer ma première mission
+                        </a>
+                    </div>
+                @else
+                    <div class="space-y-4">
+                        @foreach($recentMissions as $mission)
+                            <a href="{{ route('commercial.missions.show', $mission) }}" wire:navigate
+                                class="block p-4 rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all duration-200">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="min-w-0 flex-1">
+                                        <h4 class="font-medium text-gray-900 truncate">{{ $mission->title }}</h4>
+                                        <div class="flex items-center gap-3 mt-1 text-sm text-gray-500">
+                                            <span class="flex items-center gap-1">
+                                                <x-heroicon-o-map-pin class="w-4 h-4" />
                                                 {{ $mission->location }}
-                                            </p>
-                                        </div>
-                                        <div class="ml-4 flex items-center gap-2">
-                                            <span
-                                                class="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
-                                                {{ $mission->applications_count }} {{ __('candidat(s)') }}
-                                            </span>
-                                            <span @class([
-                                                'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
-                                                'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' => $mission->status === \App\Enums\MissionStatus::Active,
-                                                'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400' => $mission->status === \App\Enums\MissionStatus::Archived,
-                                            ])>
-                                                {{ $mission->status->label() }}
                                             </span>
                                         </div>
                                     </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
-                <div class="mt-6">
-                    <a href="{{ route('commercial.missions.index') }}" wire:navigate
-                        class="flex w-full items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:ring-gray-600 dark:hover:bg-gray-600">
-                        {{ __('Voir toutes les missions') }}
-                    </a>
-                </div>
+                                    <div class="flex flex-col items-end gap-2">
+                                        <span class="badge-themed">
+                                            {{ $mission->applications_count }} candidat(s)
+                                        </span>
+                                        <span @class([
+                                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                                            'bg-green-100 text-green-800' => $mission->status === \App\Enums\MissionStatus::Active,
+                                            'bg-gray-100 text-gray-800' => $mission->status === \App\Enums\MissionStatus::Archived,
+                                        ])>
+                                            {{ $mission->status->label() }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                    <div class="mt-6">
+                        <a href="{{ route('commercial.missions.index') }}" wire:navigate
+                            class="btn-secondary w-full justify-center">
+                            Voir toutes les missions
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

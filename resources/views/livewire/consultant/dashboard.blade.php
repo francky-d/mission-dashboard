@@ -1,195 +1,153 @@
-<div class="space-y-6">
-    {{-- Stats Cards --}}
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {{-- Available Missions --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <x-heroicon-o-briefcase class="h-6 w-6 text-gray-400" />
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {{ __('Missions disponibles') }}
-                            </dt>
-                            <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ $availableMissions }}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
+<div class="space-y-8">
+    {{-- Welcome Banner --}}
+    <div class="card-themed p-6 sm:p-8"
+        style="background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="text-white">
+                <h1 class="text-2xl font-bold">Bonjour, {{ auth()->user()->name }} 👋</h1>
+                <p class="mt-1 text-white/80">Découvrez les nouvelles opportunités de mission</p>
             </div>
-        </div>
-
-        {{-- My Applications --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <x-heroicon-o-document-text class="h-6 w-6 text-indigo-400" />
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {{ __('Mes candidatures') }}
-                            </dt>
-                            <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ $myApplications }}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Pending Applications --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <x-heroicon-o-clock class="h-6 w-6 text-yellow-400" />
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {{ __('En attente') }}
-                            </dt>
-                            <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ $pendingApplications }}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Accepted Applications --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <x-heroicon-o-check-circle class="h-6 w-6 text-green-400" />
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {{ __('Acceptées') }}
-                            </dt>
-                            <dd class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ $acceptedApplications }}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
+            <a href="{{ route('consultant.missions.index') }}" wire:navigate
+                class="btn-secondary bg-white border-white text-white hover:bg-white/10">
+                <x-heroicon-o-magnifying-glass class="w-4 h-4 mr-2" />
+                Explorer les missions
+            </a>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    {{-- Stats Cards --}}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <x-heroicon-o-briefcase class="w-6 h-6" />
+            </div>
+            <div class="stat-value">{{ $availableMissions }}</div>
+            <div class="stat-label">Missions disponibles</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <x-heroicon-o-document-text class="w-6 h-6" />
+            </div>
+            <div class="stat-value">{{ $myApplications }}</div>
+            <div class="stat-label">Mes candidatures</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <x-heroicon-o-clock class="w-6 h-6" />
+            </div>
+            <div class="stat-value">{{ $pendingApplications }}</div>
+            <div class="stat-label">En attente</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <x-heroicon-o-check-circle class="w-6 h-6" />
+            </div>
+            <div class="stat-value">{{ $acceptedApplications }}</div>
+            <div class="stat-label">Acceptées</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {{-- Recent Applications --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+        <div class="card-themed">
             <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-base font-semibold text-gray-900 dark:text-white">
-                        {{ __('Mes dernières candidatures') }}
-                    </h3>
-                    <a href="{{ route('consultant.applications.index') }}" wire:navigate
-                        class="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
-                        {{ __('Voir tout') }}
+                <div class="section-header">
+                    <h3 class="section-title">Mes dernières candidatures</h3>
+                    <a href="{{ route('consultant.applications.index') }}" wire:navigate class="link-themed text-sm">
+                        Voir tout →
                     </a>
                 </div>
-                <div class="mt-6 flow-root">
-                    @if($recentApplications->isEmpty())
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __('Aucune candidature.') }}
-                        </p>
-                    @else
-                        <ul role="list" class="-my-5 divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach($recentApplications as $application)
-                                <li class="py-4">
-                                    <div class="flex items-center justify-between">
-                                        <div class="min-w-0 flex-1">
-                                            <a href="{{ route('consultant.missions.show', $application->mission) }}"
-                                                wire:navigate
-                                                class="truncate text-sm font-medium text-gray-900 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400">
-                                                {{ $application->mission->title }}
-                                            </a>
-                                            <p class="truncate text-sm text-gray-500 dark:text-gray-400">
-                                                {{ $application->mission->commercial->name ?? '-' }}
-                                            </p>
-                                        </div>
-                                        <div class="ml-4">
-                                            <span @class([
-                                                'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
-                                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' => $application->status === \App\Enums\ApplicationStatus::Pending,
-                                                'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' => $application->status === \App\Enums\ApplicationStatus::Viewed,
-                                                'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' => $application->status === \App\Enums\ApplicationStatus::Accepted,
-                                                'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' => $application->status === \App\Enums\ApplicationStatus::Rejected,
-                                            ])>
-                                                {{ $application->status->label() }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
+                @if($recentApplications->isEmpty())
+                    <div class="empty-state py-8">
+                        <div class="empty-state-icon">
+                            <x-heroicon-o-document-text class="w-8 h-8" />
+                        </div>
+                        <p class="text-gray-500">Aucune candidature pour le moment</p>
+                        <a href="{{ route('consultant.missions.index') }}" wire:navigate class="btn-primary mt-4">
+                            Découvrir les missions
+                        </a>
+                    </div>
+                @else
+                    <div class="space-y-1">
+                        @foreach($recentApplications as $application)
+                            <a href="{{ route('consultant.missions.show', $application->mission) }}" wire:navigate
+                                class="list-item hover:bg-gray-50 -mx-6 px-6 transition-colors duration-200">
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-medium text-gray-900 truncate">{{ $application->mission->title }}</p>
+                                    <p class="text-sm text-gray-500 truncate">
+                                        {{ $application->mission->commercial->name ?? '-' }}</p>
+                                </div>
+                                <span @class([
+                                    'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium',
+                                    'bg-yellow-100 text-yellow-800' => $application->status === \App\Enums\ApplicationStatus::Pending,
+                                    'bg-blue-100 text-blue-800' => $application->status === \App\Enums\ApplicationStatus::Viewed,
+                                    'bg-green-100 text-green-800' => $application->status === \App\Enums\ApplicationStatus::Accepted,
+                                    'bg-red-100 text-red-800' => $application->status === \App\Enums\ApplicationStatus::Rejected,
+                                ])>
+                                    {{ $application->status->label() }}
+                                </span>
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
 
         {{-- Recommended Missions --}}
-        <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+        <div class="card-themed">
             <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-base font-semibold text-gray-900 dark:text-white">
-                        {{ __('Missions recommandées') }}
-                    </h3>
-                    <a href="{{ route('consultant.missions.index') }}" wire:navigate
-                        class="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
-                        {{ __('Voir tout') }}
+                <div class="section-header">
+                    <h3 class="section-title">Missions recommandées</h3>
+                    <a href="{{ route('consultant.missions.index') }}" wire:navigate class="link-themed text-sm">
+                        Voir tout →
                     </a>
                 </div>
-                <div class="mt-6 flow-root">
-                    @if($recommendedMissions->isEmpty())
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __('Aucune mission disponible.') }}
-                        </p>
-                    @else
-                        <ul role="list" class="-my-5 divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach($recommendedMissions as $mission)
-                                <li class="py-4">
-                                    <div class="flex items-center justify-between">
-                                        <div class="min-w-0 flex-1">
-                                            <a href="{{ route('consultant.missions.show', $mission) }}" wire:navigate
-                                                class="truncate text-sm font-medium text-gray-900 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400">
-                                                {{ $mission->title }}
-                                            </a>
-                                            <p class="truncate text-sm text-gray-500 dark:text-gray-400">
-                                                {{ $mission->location }} • {{ $mission->daily_rate }}€/jour
-                                            </p>
+                @if($recommendedMissions->isEmpty())
+                    <div class="empty-state py-8">
+                        <div class="empty-state-icon">
+                            <x-heroicon-o-briefcase class="w-8 h-8" />
+                        </div>
+                        <p class="text-gray-500">Aucune mission disponible</p>
+                    </div>
+                @else
+                    <div class="space-y-4">
+                        @foreach($recommendedMissions as $mission)
+                            <a href="{{ route('consultant.missions.show', $mission) }}" wire:navigate
+                                class="block p-4 rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all duration-200">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="min-w-0 flex-1">
+                                        <h4 class="font-medium text-gray-900 truncate">{{ $mission->title }}</h4>
+                                        <div class="flex items-center gap-3 mt-1 text-sm text-gray-500">
+                                            <span class="flex items-center gap-1">
+                                                <x-heroicon-o-map-pin class="w-4 h-4" />
+                                                {{ $mission->location }}
+                                            </span>
                                         </div>
-                                        <div class="ml-4 flex flex-wrap gap-1">
-                                            @foreach($mission->tags->take(2) as $tag)
-                                                <span
-                                                    class="inline-flex items-center rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
-                                                    {{ $tag->name }}
-                                                </span>
+                                        <div class="flex flex-wrap gap-1.5 mt-3">
+                                            @foreach($mission->tags->take(3) as $tag)
+                                                <span class="tag-pill">{{ $tag->name }}</span>
                                             @endforeach
                                         </div>
                                     </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
-                <div class="mt-6">
-                    <a href="{{ route('consultant.missions.index') }}" wire:navigate
-                        class="flex w-full items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:ring-gray-600 dark:hover:bg-gray-600">
-                        {{ __('Voir toutes les missions') }}
-                    </a>
-                </div>
+                                    <div class="text-right shrink-0">
+                                        <span
+                                            class="mission-rate">{{ number_format($mission->daily_rate, 0, ',', ' ') }}€</span>
+                                        <span class="block text-xs text-gray-500">/jour</span>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                    <div class="mt-6">
+                        <a href="{{ route('consultant.missions.index') }}" wire:navigate
+                            class="btn-secondary w-full justify-center">
+                            Voir toutes les missions
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

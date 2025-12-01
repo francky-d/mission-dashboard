@@ -1,3 +1,160 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Theme-based utilities using CSS variables */
+@layer components {
+    /* Primary button with theme color */
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all duration-200 shadow-sm;
+        background-color: var(--theme-primary);
+    }
+    .btn-primary:hover {
+        background-color: var(--theme-secondary);
+        @apply shadow-md;
+    }
+    .btn-primary:focus {
+        @apply outline-none ring-2 ring-offset-2;
+        --tw-ring-color: var(--theme-primary);
+    }
+
+    /* Secondary/outline button */
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 border-2 bg-white;
+        color: var(--theme-primary);
+        border-color: var(--theme-primary);
+    }
+    .btn-secondary:hover {
+        background-color: rgba(var(--theme-primary-rgb), 0.1);
+    }
+
+    /* Theme card with accent border */
+    .card-themed {
+        @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden;
+    }
+    .card-themed:hover {
+        @apply shadow-md;
+    }
+
+    /* Stat card */
+    .stat-card {
+        @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-200;
+    }
+    .stat-card:hover {
+        @apply shadow-md -translate-y-0.5;
+    }
+    .stat-card .stat-icon {
+        @apply w-12 h-12 rounded-lg flex items-center justify-center;
+        background-color: rgba(var(--theme-primary-rgb), 0.1);
+    }
+    .stat-card .stat-icon svg {
+        @apply w-6 h-6;
+        color: var(--theme-primary);
+    }
+    .stat-card .stat-value {
+        @apply text-2xl font-bold text-gray-900 mt-4;
+    }
+    .stat-card .stat-label {
+        @apply text-sm font-medium text-gray-500 mt-1;
+    }
+
+    /* Theme link */
+    .link-themed {
+        @apply font-medium transition-colors duration-200;
+        color: var(--theme-primary);
+    }
+    .link-themed:hover {
+        color: var(--theme-secondary);
+    }
+
+    /* Badge themed */
+    .badge-themed {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+        background-color: rgba(var(--theme-primary-rgb), 0.1);
+        color: var(--theme-primary);
+    }
+
+    /* Tag pill */
+    .tag-pill {
+        @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-all duration-200;
+        background-color: rgba(var(--theme-primary-rgb), 0.1);
+        color: var(--theme-primary);
+    }
+    .tag-pill:hover {
+        background-color: rgba(var(--theme-primary-rgb), 0.2);
+    }
+    .tag-pill.active {
+        @apply text-white;
+        background-color: var(--theme-primary);
+    }
+
+    /* Section header */
+    .section-header {
+        @apply flex items-center justify-between mb-6;
+    }
+    .section-title {
+        @apply text-lg font-semibold text-gray-900;
+    }
+
+    /* List item */
+    .list-item {
+        @apply flex items-center justify-between py-4 border-b border-gray-100 last:border-0;
+    }
+
+    /* Avatar */
+    .avatar {
+        @apply w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold text-white;
+        background-color: var(--theme-primary);
+    }
+    .avatar-lg {
+        @apply w-14 h-14 text-lg;
+    }
+
+    /* Navigation active state */
+    .nav-active {
+        border-bottom-color: var(--theme-primary);
+        color: var(--theme-primary);
+    }
+
+    /* Empty state */
+    .empty-state {
+        @apply text-center py-12;
+    }
+    .empty-state-icon {
+        @apply mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4;
+        background-color: rgba(var(--theme-primary-rgb), 0.1);
+    }
+    .empty-state-icon svg {
+        @apply w-8 h-8;
+        color: var(--theme-primary);
+    }
+
+    /* Search input */
+    .search-input {
+        @apply w-full px-4 py-2.5 pl-10 text-sm bg-white border border-gray-200 rounded-lg transition-all duration-200;
+    }
+    .search-input:focus {
+        @apply outline-none ring-2 border-transparent;
+        --tw-ring-color: rgba(var(--theme-primary-rgb), 0.3);
+        border-color: var(--theme-primary);
+    }
+
+    /* Mission card */
+    .mission-card {
+        @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-200;
+    }
+    .mission-card:hover {
+        @apply shadow-lg -translate-y-1;
+        border-color: rgba(var(--theme-primary-rgb), 0.3);
+    }
+    .mission-card .mission-title {
+        @apply text-lg font-semibold text-gray-900 mb-2;
+    }
+    .mission-card .mission-meta {
+        @apply flex items-center gap-4 text-sm text-gray-500 mb-4;
+    }
+    .mission-card .mission-rate {
+        @apply text-lg font-bold;
+        color: var(--theme-primary);
+    }
+}

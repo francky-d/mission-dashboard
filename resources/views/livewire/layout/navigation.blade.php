@@ -16,62 +16,79 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" wire:navigate>
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-3">
+                        @if($siteSettings->logo_url)
+                            <img src="{{ $siteSettings->logo_url }}" alt="{{ $siteSettings->site_name }}"
+                                class="h-8 w-auto">
+                        @else
+                            <div class="avatar" style="width: 36px; height: 36px;">
+                                <span class="text-sm">{{ substr($siteSettings->site_name ?? 'M', 0, 1) }}</span>
+                            </div>
+                        @endif
+                        <span
+                            class="hidden sm:block text-lg font-semibold text-gray-900">{{ $siteSettings->site_name ?? 'Mission Dashboard' }}</span>
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-1 sm:-my-px sm:ms-8 sm:flex">
                     @auth
                         @if(auth()->user()->role === \App\Enums\UserRole::Commercial)
-                            <x-nav-link :href="route('commercial.dashboard')"
-                                :active="request()->routeIs('commercial.dashboard')" wire:navigate>
+                            <a href="{{ route('commercial.dashboard') }}" wire:navigate
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('commercial.dashboard') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
+                                <x-heroicon-o-home class="w-4 h-4 mr-2" />
                                 {{ __('Dashboard') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('commercial.missions.index')"
-                                :active="request()->routeIs('commercial.missions.*')" wire:navigate>
+                            </a>
+                            <a href="{{ route('commercial.missions.index') }}" wire:navigate
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('commercial.missions.*') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
+                                <x-heroicon-o-briefcase class="w-4 h-4 mr-2" />
                                 {{ __('Missions') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('commercial.messages.index')"
-                                :active="request()->routeIs('commercial.messages.*')" wire:navigate>
+                            </a>
+                            <a href="{{ route('commercial.messages.index') }}" wire:navigate
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('commercial.messages.*') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
+                                <x-heroicon-o-chat-bubble-left-right class="w-4 h-4 mr-2" />
                                 {{ __('Messages') }}
-                            </x-nav-link>
+                            </a>
                         @else
-                            <x-nav-link :href="route('consultant.dashboard')"
-                                :active="request()->routeIs('consultant.dashboard')" wire:navigate>
+                            <a href="{{ route('consultant.dashboard') }}" wire:navigate
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('consultant.dashboard') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
+                                <x-heroicon-o-home class="w-4 h-4 mr-2" />
                                 {{ __('Dashboard') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('consultant.missions.index')"
-                                :active="request()->routeIs('consultant.missions.*')" wire:navigate>
+                            </a>
+                            <a href="{{ route('consultant.missions.index') }}" wire:navigate
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('consultant.missions.*') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
+                                <x-heroicon-o-magnifying-glass class="w-4 h-4 mr-2" />
                                 {{ __('Missions') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('consultant.applications.index')"
-                                :active="request()->routeIs('consultant.applications.*')" wire:navigate>
+                            </a>
+                            <a href="{{ route('consultant.applications.index') }}" wire:navigate
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('consultant.applications.*') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
+                                <x-heroicon-o-document-text class="w-4 h-4 mr-2" />
                                 {{ __('Candidatures') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('consultant.messages.index')"
-                                :active="request()->routeIs('consultant.messages.*')" wire:navigate>
+                            </a>
+                            <a href="{{ route('consultant.messages.index') }}" wire:navigate
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('consultant.messages.*') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
+                                <x-heroicon-o-chat-bubble-left-right class="w-4 h-4 mr-2" />
                                 {{ __('Messages') }}
-                            </x-nav-link>
+                            </a>
                         @endif
                     @else
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        <a href="{{ route('dashboard') }}" wire:navigate
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('dashboard') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
                             {{ __('Dashboard') }}
-                        </x-nav-link>
+                        </a>
                     @endauth
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-2">
+            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-3">
                 {{-- Notifications --}}
                 @auth
                     @if(auth()->user()->role === \App\Enums\UserRole::Commercial)
@@ -84,36 +101,42 @@ new class extends Component
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
-                                x-on:profile-updated.window="name = $event.detail.name"></div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
+                            class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 focus:outline-none transition-colors duration-200">
+                            <div class="avatar" style="width: 28px; height: 28px; font-size: 11px;">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                             </div>
+                            <span x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
+                                x-on:profile-updated.window="name = $event.detail.name" class="hidden md:block"></span>
+                            <x-heroicon-s-chevron-down class="w-4 h-4 text-gray-500" />
                         </button>
                     </x-slot>
 
                     <x-slot name="content">
+                        <div class="px-4 py-3 border-b border-gray-100">
+                            <p class="text-sm font-medium text-gray-900"
+                                x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
+                                x-on:profile-updated.window="name = $event.detail.name"></p>
+                            <p class="text-xs text-gray-500 mt-0.5">{{ auth()->user()->email }}</p>
+                        </div>
+
                         @if(auth()->user()->role === \App\Enums\UserRole::Consultant)
-                            <x-dropdown-link :href="route('consultant.profile')" wire:navigate>
+                            <x-dropdown-link :href="route('consultant.profile')" wire:navigate
+                                class="flex items-center gap-2">
+                                <x-heroicon-o-user-circle class="w-4 h-4" />
                                 {{ __('Mon profil') }}
                             </x-dropdown-link>
                         @else
-                            <x-dropdown-link :href="route('profile')" wire:navigate>
+                            <x-dropdown-link :href="route('profile')" wire:navigate class="flex items-center gap-2">
+                                <x-heroicon-o-user-circle class="w-4 h-4" />
                                 {{ __('Profile') }}
                             </x-dropdown-link>
                         @endif
 
                         <!-- Authentication -->
                         <button wire:click="logout" class="w-full text-start">
-                            <x-dropdown-link>
-                                {{ __('Log Out') }}
+                            <x-dropdown-link class="flex items-center gap-2 text-red-600 hover:bg-red-50">
+                                <x-heroicon-o-arrow-right-on-rectangle class="w-4 h-4" />
+                                {{ __('Déconnexion') }}
                             </x-dropdown-link>
                         </button>
                     </x-slot>
@@ -123,86 +146,97 @@ new class extends Component
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    class="inline-flex items-center justify-center p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none transition duration-200">
+                    <x-heroicon-o-bars-3 x-show="!open" class="h-6 w-6" />
+                    <x-heroicon-o-x-mark x-show="open" x-cloak class="h-6 w-6" />
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden border-t border-gray-100">
+        <div class="pt-2 pb-3 space-y-1 px-4">
             @auth
                 @if(auth()->user()->role === \App\Enums\UserRole::Commercial)
-                    <x-responsive-nav-link :href="route('commercial.dashboard')"
-                        :active="request()->routeIs('commercial.dashboard')" wire:navigate>
+                    <a href="{{ route('commercial.dashboard') }}" wire:navigate
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('commercial.dashboard') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <x-heroicon-o-home class="w-5 h-5" />
                         {{ __('Dashboard') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('commercial.missions.index')"
-                        :active="request()->routeIs('commercial.missions.*')" wire:navigate>
+                    </a>
+                    <a href="{{ route('commercial.missions.index') }}" wire:navigate
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('commercial.missions.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <x-heroicon-o-briefcase class="w-5 h-5" />
                         {{ __('Missions') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('commercial.messages.index')"
-                        :active="request()->routeIs('commercial.messages.*')" wire:navigate>
+                    </a>
+                    <a href="{{ route('commercial.messages.index') }}" wire:navigate
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('commercial.messages.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <x-heroicon-o-chat-bubble-left-right class="w-5 h-5" />
                         {{ __('Messages') }}
-                    </x-responsive-nav-link>
+                    </a>
                 @else
-                    <x-responsive-nav-link :href="route('consultant.dashboard')"
-                        :active="request()->routeIs('consultant.dashboard')" wire:navigate>
+                    <a href="{{ route('consultant.dashboard') }}" wire:navigate
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('consultant.dashboard') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <x-heroicon-o-home class="w-5 h-5" />
                         {{ __('Dashboard') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('consultant.missions.index')"
-                        :active="request()->routeIs('consultant.missions.*')" wire:navigate>
+                    </a>
+                    <a href="{{ route('consultant.missions.index') }}" wire:navigate
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('consultant.missions.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <x-heroicon-o-magnifying-glass class="w-5 h-5" />
                         {{ __('Missions') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('consultant.applications.index')"
-                        :active="request()->routeIs('consultant.applications.*')" wire:navigate>
+                    </a>
+                    <a href="{{ route('consultant.applications.index') }}" wire:navigate
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('consultant.applications.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <x-heroicon-o-document-text class="w-5 h-5" />
                         {{ __('Candidatures') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('consultant.messages.index')"
-                        :active="request()->routeIs('consultant.messages.*')" wire:navigate>
+                    </a>
+                    <a href="{{ route('consultant.messages.index') }}" wire:navigate
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('consultant.messages.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <x-heroicon-o-chat-bubble-left-right class="w-5 h-5" />
                         {{ __('Messages') }}
-                    </x-responsive-nav-link>
+                    </a>
                 @endif
             @else
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                <a href="{{ route('dashboard') }}" wire:navigate
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('dashboard') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
                     {{ __('Dashboard') }}
-                </x-responsive-nav-link>
+                </a>
             @endauth
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800"
-                    x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
-                    x-on:profile-updated.window="name = $event.detail.name"></div>
-                <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
+        <div class="pt-4 pb-4 border-t border-gray-200 px-4">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="avatar">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+                <div>
+                    <div class="font-medium text-gray-900" x-data="{{ json_encode(['name' => auth()->user()->name]) }}"
+                        x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                    <div class="text-sm text-gray-500">{{ auth()->user()->email }}</div>
+                </div>
             </div>
 
-            <div class="mt-3 space-y-1">
+            <div class="space-y-1">
                 @if(auth()->user()->role === \App\Enums\UserRole::Consultant)
-                    <x-responsive-nav-link :href="route('consultant.profile')" wire:navigate>
+                    <a href="{{ route('consultant.profile') }}" wire:navigate
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50">
+                        <x-heroicon-o-user-circle class="w-5 h-5" />
                         {{ __('Mon profil') }}
-                    </x-responsive-nav-link>
+                    </a>
                 @else
-                    <x-responsive-nav-link :href="route('profile')" wire:navigate>
+                    <a href="{{ route('profile') }}" wire:navigate
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50">
+                        <x-heroicon-o-user-circle class="w-5 h-5" />
                         {{ __('Profile') }}
-                    </x-responsive-nav-link>
+                    </a>
                 @endif
 
                 <!-- Authentication -->
-                <button wire:click="logout" class="w-full text-start">
-                    <x-responsive-nav-link>
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                <button wire:click="logout"
+                    class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium text-red-600 hover:bg-red-50">
+                    <x-heroicon-o-arrow-right-on-rectangle class="w-5 h-5" />
+                    {{ __('Déconnexion') }}
                 </button>
             </div>
         </div>
