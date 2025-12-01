@@ -29,6 +29,16 @@ class MissionFactory extends Factory
     }
 
     /**
+     * Indicate that the mission is active.
+     */
+    public function active(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => MissionStatus::Active,
+        ]);
+    }
+
+    /**
      * Indicate that the mission is archived.
      */
     public function archived(): static

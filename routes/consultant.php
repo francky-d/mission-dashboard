@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Consultant\MissionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,4 +15,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'verified', 'consultant'])->prefix('consultant')->name('consultant.')->group(function () {
     // Profil consultant
     Route::view('profile', 'consultant.profile')->name('profile');
+
+    // Missions
+    Route::get('missions', [MissionController::class, 'index'])->name('missions.index');
+    Route::get('missions/{mission}', [MissionController::class, 'show'])->name('missions.show');
 });
