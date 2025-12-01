@@ -22,4 +22,7 @@ Route::middleware(['auth', 'verified', 'consultant'])->prefix('consultant')->nam
 
     // Candidatures
     Route::view('applications', 'consultant.applications.index')->name('applications.index');
+
+    // Messages
+    Route::view('messages', 'consultant.messages.index')->name('messages.index');
 });
