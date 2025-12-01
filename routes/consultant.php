@@ -19,4 +19,7 @@ Route::middleware(['auth', 'verified', 'consultant'])->prefix('consultant')->nam
     // Missions
     Route::get('missions', [MissionController::class, 'index'])->name('missions.index');
     Route::get('missions/{mission}', [MissionController::class, 'show'])->name('missions.show');
+
+    // Candidatures
+    Route::view('applications', 'consultant.applications.index')->name('applications.index');
 });
