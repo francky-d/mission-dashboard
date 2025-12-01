@@ -73,6 +73,7 @@ Ce projet vise à créer un **portail interne**, semblable à un mini LinkedIn, 
 4. **En tant qu’admin, je peux visualiser toutes les missions.**
 5. **En tant qu’admin, je peux accéder à un tableau de bord (Filament) avec statistiques.**
 6. **En tant qu’admin, je peux gérer les permissions globales de la plateforme.**
+7. **En tant qu’admin, je peux définir des paramètres globaux de la plateforme par exemple le domaine des mails pour les utilisateurs (ex: @monentreprise.com). Si un compte ne respecte pas domain, il ne peut pas s’inscrire/se connecter.**
 
 ---
 
