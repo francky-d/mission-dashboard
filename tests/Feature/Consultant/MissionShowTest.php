@@ -1,6 +1,8 @@
 <?php
 
+use App\Enums\ApplicationStatus;
 use App\Livewire\Consultant\Mission\MissionShow;
+use App\Models\Application;
 use App\Models\Mission;
 use App\Models\Tag;
 use App\Models\User;
@@ -145,4 +147,126 @@ it('displays back to list link', function () {
     Livewire::actingAs($consultant)
         ->test(MissionShow::class, ['mission' => $mission])
         ->assertSee('Retour aux missions');
+});
+
+// Application Tests
+
+it('displays apply button when consultant has not applied', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->assertSee('Postuler à cette mission');
+});
+
+it('can submit application to a mission', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->call('apply')
+        ->assertDispatched('application-submitted');
+
+    $this->assertDatabaseHas('applications', [
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Pending->value,
+    ]);
+});
+
+it('shows application status after applying', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->call('apply')
+        ->assertSee('Candidature envoyée')
+        ->assertDontSee('Postuler à cette mission');
+});
+
+it('prevents duplicate applications', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    // Create first application
+    Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Pending,
+    ]);
+
+    // Try to apply again
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->call('apply');
+
+    // Should still only have one application
+    expect(Application::where('mission_id', $mission->id)
+        ->where('consultant_id', $consultant->id)
+        ->count())->toBe(1);
+});
+
+it('displays existing application status', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Pending,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->assertSee('Candidature envoyée')
+        ->assertSee('En attente')
+        ->assertDontSee('Postuler à cette mission');
+});
+
+it('displays viewed application status', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Viewed,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->assertSee('Consulté');
+});
+
+it('displays accepted application status', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Accepted,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->assertSee('Accepté');
+});
+
+it('displays rejected application status', function () {
+    $consultant = User::factory()->consultant()->create();
+    $mission = Mission::factory()->create();
+
+    Application::create([
+        'mission_id' => $mission->id,
+        'consultant_id' => $consultant->id,
+        'status' => ApplicationStatus::Rejected,
+    ]);
+
+    Livewire::actingAs($consultant)
+        ->test(MissionShow::class, ['mission' => $mission])
+        ->assertSee('Refusé');
 });
