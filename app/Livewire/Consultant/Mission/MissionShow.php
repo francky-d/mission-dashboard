@@ -5,6 +5,7 @@ namespace App\Livewire\Consultant\Mission;
 use App\Enums\ApplicationStatus;
 use App\Models\Application;
 use App\Models\Mission;
+use App\Notifications\NewApplicationReceived;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -42,11 +43,14 @@ class MissionShow extends Component
             return;
         }
 
-        Application::create([
+        $application = Application::create([
             'mission_id' => $this->mission->id,
             'consultant_id' => Auth::id(),
             'status' => ApplicationStatus::Pending,
         ]);
+
+        // Notify the commercial about the new application
+        $this->mission->commercial->notify(new NewApplicationReceived($application));
 
         unset($this->existingApplication);
         unset($this->hasApplied);
