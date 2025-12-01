@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Models\AllowedEmailDomain;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -29,6 +30,7 @@ class LoginForm extends Form
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
+        $this->ensureEmailDomainIsAllowed();
 
         if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
             RateLimiter::hit($this->throttleKey());
@@ -39,6 +41,18 @@ class LoginForm extends Form
         }
 
         RateLimiter::clear($this->throttleKey());
+    }
+
+    /**
+     * Ensure the email domain is allowed.
+     */
+    protected function ensureEmailDomainIsAllowed(): void
+    {
+        if (! AllowedEmailDomain::isEmailAllowed($this->email)) {
+            throw ValidationException::withMessages([
+                'form.email' => __('The email domain is not allowed. Please use an authorized company email.'),
+            ]);
+        }
     }
 
     /**
