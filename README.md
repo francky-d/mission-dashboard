@@ -13,6 +13,7 @@ A Laravel 12 application with Livewire, Filament 4, and Pest.
 - **Laravel 12** - PHP Framework
 - **Livewire 3.7** - Full-stack framework for Laravel
 - **Filament 4** - Admin panel builder
+- **Laravel Reverb** - WebSocket server for real-time features
 - **Pest 3** - Testing framework
 - **PostgreSQL 18** - Database
 - **Mailpit** - Email testing
@@ -69,6 +70,12 @@ Build frontend assets:
 
 ```bash
 ./vendor/bin/sail npm run dev
+```
+
+Start WebSocket server (for real-time messaging):
+
+```bash
+./vendor/bin/sail artisan reverb:start
 ```
 
 Stop services:
