@@ -22,8 +22,29 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        :root {
+            --consultant-primary:
+                {{ $siteSettings->consultant_primary_color }}
+            ;
+            --consultant-secondary:
+                {{ $siteSettings->consultant_secondary_color }}
+            ;
+            --consultant-accent:
+                {{ $siteSettings->consultant_accent_color }}
+            ;
+            --commercial-primary:
+                {{ $siteSettings->commercial_primary_color }}
+            ;
+            --commercial-secondary:
+                {{ $siteSettings->commercial_secondary_color }}
+            ;
+            --commercial-accent:
+                {{ $siteSettings->commercial_accent_color }}
+            ;
+        }
+
         .gradient-text {
-            background: linear-gradient(135deg, #3B82F6 0%, #F97316 100%);
+            background: linear-gradient(135deg, var(--consultant-primary) 0%, var(--commercial-primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
