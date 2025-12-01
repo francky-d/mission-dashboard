@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckUserSuspended;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureUserIsCommercial;
 use App\Http\Middleware\EnsureUserIsConsultant;
@@ -27,6 +28,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'consultant' => EnsureUserIsConsultant::class,
             'commercial' => EnsureUserIsCommercial::class,
             'admin' => EnsureUserIsAdmin::class,
+            'suspended' => CheckUserSuspended::class,
+        ]);
+
+        $middleware->appendToGroup('web', [
+            CheckUserSuspended::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

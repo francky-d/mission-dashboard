@@ -25,6 +25,7 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
         'role',
+        'suspended_at',
     ];
 
     /**
@@ -48,6 +49,7 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'suspended_at' => 'datetime',
         ];
     }
 
@@ -56,7 +58,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role === UserRole::Admin;
+        return $this->role === UserRole::Admin && ! $this->isSuspended();
     }
 
     /**
@@ -89,5 +91,29 @@ class User extends Authenticatable implements FilamentUser
     public function isAdmin(): bool
     {
         return $this->role === UserRole::Admin;
+    }
+
+    /**
+     * Check if user is suspended.
+     */
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
+    }
+
+    /**
+     * Suspend the user.
+     */
+    public function suspend(): void
+    {
+        $this->update(['suspended_at' => now()]);
+    }
+
+    /**
+     * Unsuspend the user.
+     */
+    public function unsuspend(): void
+    {
+        $this->update(['suspended_at' => null]);
     }
 }
