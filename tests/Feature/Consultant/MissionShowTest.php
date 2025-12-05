@@ -143,7 +143,7 @@ it('displays apply button when consultant has not applied', function () {
 
     Livewire::actingAs($consultant)
         ->test(MissionShow::class, ['mission' => $mission])
-        ->assertSee('Postuler à cette mission');
+        ->assertSee('Je suis intéressé');
 });
 
 it('can submit application to a mission', function () {
@@ -170,7 +170,7 @@ it('shows application status after applying', function () {
         ->test(MissionShow::class, ['mission' => $mission])
         ->call('apply')
         ->assertSee('Candidature envoyée')
-        ->assertDontSee('Postuler à cette mission');
+        ->assertDontSee('Je suis intéressé');
 });
 
 it('prevents duplicate applications', function () {
@@ -209,7 +209,7 @@ it('displays existing application status', function () {
         ->test(MissionShow::class, ['mission' => $mission])
         ->assertSee('Candidature envoyée')
         ->assertSee('En attente')
-        ->assertDontSee('Postuler à cette mission');
+        ->assertDontSee('Je suis intéressé');
 });
 
 it('displays viewed application status', function () {
@@ -354,7 +354,7 @@ it('can apply again after withdrawing', function () {
     Livewire::actingAs($consultant)
         ->test(MissionShow::class, ['mission' => $mission])
         ->call('withdraw')
-        ->assertSee('Postuler à cette mission')
+        ->assertSee('Je suis intéressé')
         ->call('apply')
         ->assertSee('Candidature envoyée');
 

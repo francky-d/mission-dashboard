@@ -181,7 +181,7 @@
                 class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed">
                 <span wire:loading.remove wire:target="apply">
                     <x-heroicon-m-paper-airplane class="w-4 h-4 mr-2" />
-                    {{ __('Postuler à cette mission') }}
+                    {{ __('Je suis intéressé') }}
                 </span>
                 <span wire:loading wire:target="apply" class="flex items-center">
                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
