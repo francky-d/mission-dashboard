@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+            <h2 class="text-xl font-semibold leading-tight text-slate-900">
                 {{ __('Mes missions') }}
             </h2>
             <a href="{{ route('commercial.missions.create') }}" wire:navigate
