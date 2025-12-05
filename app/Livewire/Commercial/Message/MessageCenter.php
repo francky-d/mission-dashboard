@@ -23,6 +23,8 @@ class MessageCenter extends Component
     #[Validate('required|string|max:1000')]
     public string $newMessage = '';
 
+    public bool $showProfileModal = false;
+
     public function mount(?int $consultant = null): void
     {
         $this->consultant = $consultant;
@@ -30,6 +32,16 @@ class MessageCenter extends Component
         if ($this->consultant) {
             $this->markMessagesAsRead();
         }
+    }
+
+    public function openProfileModal(): void
+    {
+        $this->showProfileModal = true;
+    }
+
+    public function closeProfileModal(): void
+    {
+        $this->showProfileModal = false;
     }
 
     public function selectConversation(int $userId): void
@@ -80,6 +92,21 @@ class MessageCenter extends Component
                 $q->where('sender_id', $this->consultant)->where('receiver_id', $userId);
             })
             ->orderBy('created_at', 'asc')
+            ->get();
+    }
+
+    #[Computed]
+    public function consultantApplications(): Collection
+    {
+        if (! $this->consultant) {
+            return collect();
+        }
+
+        return Application::query()
+            ->with('mission')
+            ->where('consultant_id', $this->consultant)
+            ->whereHas('mission', fn ($q) => $q->where('commercial_id', Auth::id()))
+            ->latest()
             ->get();
     }
 
