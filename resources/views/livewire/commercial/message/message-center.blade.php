@@ -168,10 +168,12 @@
         <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div class="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                 {{-- Background overlay --}}
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" wire:click="closeProfileModal"></div>
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" wire:click="closeProfileModal">
+                </div>
 
                 {{-- Modal panel --}}
-                <div class="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle dark:bg-gray-800">
+                <div
+                    class="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle dark:bg-gray-800">
                     {{-- Modal Header --}}
                     <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="modal-title">
@@ -188,7 +190,8 @@
                         <div class="space-y-6">
                             {{-- Profile Header --}}
                             <div class="flex items-start gap-4">
-                                <div class="h-16 w-16 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="h-16 w-16 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0">
                                     <span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                                         {{ strtoupper(substr($user->name, 0, 1)) }}
                                     </span>
@@ -224,7 +227,8 @@
                                     </h5>
                                     <div class="flex flex-wrap gap-2">
                                         @foreach($user->consultantProfile->tags as $tag)
-                                            <span class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700 border border-indigo-200">
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700 border border-indigo-200">
                                                 {{ $tag->name }}
                                             </span>
                                         @endforeach
@@ -252,7 +256,8 @@
                                     </h5>
                                     <div class="space-y-2">
                                         @foreach($applications as $application)
-                                            <div class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+                                            <div
+                                                class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 p-3">
                                                 <div>
                                                     <p class="text-sm font-medium text-gray-900 dark:text-white">
                                                         {{ $application->mission->title }}
