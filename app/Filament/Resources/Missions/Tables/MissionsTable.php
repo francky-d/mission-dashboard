@@ -28,10 +28,6 @@ class MissionsTable
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('daily_rate')
-                    ->label('TJM')
-                    ->money('EUR')
-                    ->sortable(),
                 TextColumn::make('status')
                     ->label('Statut')
                     ->badge()

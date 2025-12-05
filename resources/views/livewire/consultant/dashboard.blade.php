@@ -132,13 +132,7 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                    <div class="text-right shrink-0">
-                                        <span
-                                            class="mission-rate">{{ number_format($mission->daily_rate, 0, ',', ' ') }}€</span>
-                                        <span class="block text-xs text-gray-500">/jour</span>
-                                    </div>
-                                </div>
-                            </a>
+                                </a>
                         @endforeach
                     </div>
                     <div class="mt-6">

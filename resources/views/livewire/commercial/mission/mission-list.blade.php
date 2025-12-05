@@ -122,12 +122,6 @@
                                     {{ $mission->location }}
                                 </div>
                             @endif
-                            @if($mission->daily_rate)
-                                <div class="flex items-center">
-                                    <x-heroicon-m-currency-euro class="w-4 h-4 mr-1" />
-                                    {{ number_format($mission->daily_rate, 0, ',', ' ') }} €/jour
-                                </div>
-                            @endif
                         </div>
 
                         @if($mission->tags->isNotEmpty())

@@ -149,7 +149,6 @@ describe('MissionResource View', function () {
             ->create([
                 'title' => 'Senior Laravel Developer',
                 'location' => 'Paris',
-                'daily_rate' => 600,
             ]);
 
         Livewire::test(ViewMission::class, ['record' => $mission->id])

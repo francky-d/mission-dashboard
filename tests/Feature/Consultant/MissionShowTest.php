@@ -80,20 +80,6 @@ it('displays mission location', function () {
         ->assertSee('Paris, France');
 });
 
-it('displays mission daily rate', function () {
-    $consultant = User::factory()->consultant()->create();
-    $commercial = User::factory()->commercial()->create();
-
-    $mission = Mission::factory()->active()->create([
-        'commercial_id' => $commercial->id,
-        'daily_rate' => 600,
-    ]);
-
-    Livewire::actingAs($consultant)
-        ->test(MissionShow::class, ['mission' => $mission])
-        ->assertSee('600');
-});
-
 it('displays mission tags', function () {
     $consultant = User::factory()->consultant()->create();
     $commercial = User::factory()->commercial()->create();

@@ -110,7 +110,6 @@ it('displays mission details in application', function () {
     $mission = Mission::factory()->create([
         'commercial_id' => $commercial->id,
         'location' => 'Paris',
-        'daily_rate' => 500,
     ]);
 
     Application::create([
@@ -122,7 +121,6 @@ it('displays mission details in application', function () {
     Livewire::actingAs($consultant)
         ->test(ApplicationList::class)
         ->assertSee('Paris')
-        ->assertSee('500')
         ->assertSee('Commercial Name');
 });
 

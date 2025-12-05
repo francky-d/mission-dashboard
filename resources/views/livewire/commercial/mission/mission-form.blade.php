@@ -26,36 +26,17 @@
             @enderror
         </div>
 
-        {{-- TJM et Lieu --}}
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <div>
-                <label for="daily_rate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {{ __('TJM (€/jour)') }} <span class="text-red-500">*</span>
-                </label>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                    <input type="number" id="daily_rate" wire:model="daily_rate" min="100" max="5000"
-                        class="block w-full rounded-md border-gray-300 pr-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
-                        placeholder="500" />
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                        <span class="text-gray-500 sm:text-sm">€</span>
-                    </div>
-                </div>
-                @error('daily_rate')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {{ __('Lieu') }} <span class="text-red-500">*</span>
-                </label>
-                <input type="text" id="location" wire:model="location"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
-                    placeholder="Paris, Remote, Lyon..." />
-                @error('location')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
+        {{-- Lieu --}}
+        <div>
+            <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {{ __('Lieu') }} <span class="text-red-500">*</span>
+            </label>
+            <input type="text" id="location" wire:model="location"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+                placeholder="Paris, Remote, Lyon..." />
+            @error('location')
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+            @enderror
         </div>
 
         {{-- Tags --}}

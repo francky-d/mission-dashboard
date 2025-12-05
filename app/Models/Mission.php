@@ -18,7 +18,6 @@ class Mission extends Model
         'commercial_id',
         'title',
         'description',
-        'daily_rate',
         'location',
         'status',
     ];
@@ -27,7 +26,6 @@ class Mission extends Model
     {
         return [
             'status' => MissionStatus::class,
-            'daily_rate' => 'integer',
         ];
     }
 

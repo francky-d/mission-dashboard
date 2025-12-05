@@ -24,9 +24,6 @@ class MissionInfolist
                                     ->label('Commercial'),
                                 TextEntry::make('location')
                                     ->label('Localisation'),
-                                TextEntry::make('daily_rate')
-                                    ->label('TJM')
-                                    ->money('EUR'),
                                 TextEntry::make('status')
                                     ->label('Statut')
                                     ->badge()

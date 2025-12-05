@@ -166,7 +166,6 @@ describe('MissionForm Component', function () {
             ->test(MissionForm::class)
             ->set('title', 'New Mission')
             ->set('description', 'Mission description')
-            ->set('daily_rate', 500)
             ->set('location', 'Paris')
             ->set('selectedTags', [$tag->id])
             ->call('save')
@@ -175,7 +174,6 @@ describe('MissionForm Component', function () {
         $this->assertDatabaseHas('missions', [
             'title' => 'New Mission',
             'description' => 'Mission description',
-            'daily_rate' => 500,
             'location' => 'Paris',
             'commercial_id' => $this->commercial->id,
         ]);
@@ -202,26 +200,9 @@ describe('MissionForm Component', function () {
             ->test(MissionForm::class)
             ->set('title', '')
             ->set('description', '')
-            ->set('daily_rate', null)
             ->set('location', '')
             ->call('save')
-            ->assertHasErrors(['title', 'description', 'daily_rate', 'location']);
-    });
-
-    it('validates daily rate minimum', function () {
-        Livewire::actingAs($this->commercial)
-            ->test(MissionForm::class)
-            ->set('daily_rate', 50)
-            ->call('save')
-            ->assertHasErrors(['daily_rate']);
-    });
-
-    it('validates daily rate maximum', function () {
-        Livewire::actingAs($this->commercial)
-            ->test(MissionForm::class)
-            ->set('daily_rate', 6000)
-            ->call('save')
-            ->assertHasErrors(['daily_rate']);
+            ->assertHasErrors(['title', 'description', 'location']);
     });
 
     it('can toggle tags', function () {
@@ -254,14 +235,12 @@ describe('MissionShow Component', function () {
         $mission = Mission::factory()->create([
             'commercial_id' => $this->commercial->id,
             'title' => 'My Mission',
-            'daily_rate' => 600,
             'location' => 'Lyon',
         ]);
 
         Livewire::actingAs($this->commercial)
             ->test(MissionShow::class, ['mission' => $mission])
             ->assertSee('My Mission')
-            ->assertSee('600')
             ->assertSee('Lyon');
     });
 

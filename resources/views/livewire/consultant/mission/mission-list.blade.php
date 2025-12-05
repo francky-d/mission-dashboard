@@ -91,14 +91,6 @@
                                     · {{ $mission->created_at->diffForHumans() }}
                                 </p>
                             </div>
-                            @if($mission->daily_rate)
-                                <div class="ml-4 flex-shrink-0">
-                                    <span
-                                        class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
-                                        {{ number_format($mission->daily_rate, 0, ',', ' ') }} €/jour
-                                    </span>
-                                </div>
-                            @endif
                         </div>
 
                         <p class="mt-3 line-clamp-2 text-gray-600 dark:text-gray-300">

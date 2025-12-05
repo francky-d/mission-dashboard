@@ -22,7 +22,6 @@ class MissionFactory extends Factory
             'commercial_id' => User::factory()->commercial(),
             'title' => fake()->jobTitle().' - '.fake()->randomElement(['Junior', 'Confirmé', 'Senior', 'Lead', 'Expert']),
             'description' => fake()->paragraphs(3, true),
-            'daily_rate' => fake()->numberBetween(300, 800),
             'location' => fake()->city().', France',
             'status' => MissionStatus::Active,
         ];

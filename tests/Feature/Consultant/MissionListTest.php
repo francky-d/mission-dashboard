@@ -68,14 +68,12 @@ it('displays mission details correctly', function () {
         'commercial_id' => $commercial->id,
         'title' => 'Test Mission',
         'location' => 'Paris',
-        'daily_rate' => 500,
     ]);
 
     Livewire::actingAs($consultant)
         ->test(MissionList::class)
         ->assertSee('Test Mission')
-        ->assertSee('Paris')
-        ->assertSee('500');
+        ->assertSee('Paris');
 });
 
 it('displays mission tags', function () {

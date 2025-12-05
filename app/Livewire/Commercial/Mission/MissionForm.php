@@ -19,8 +19,6 @@ class MissionForm extends Component
 
     public string $description = '';
 
-    public ?int $daily_rate = null;
-
     public string $location = '';
 
     /** @var array<int> */
@@ -32,7 +30,6 @@ class MissionForm extends Component
             $this->mission = $mission;
             $this->title = $mission->title;
             $this->description = $mission->description ?? '';
-            $this->daily_rate = $mission->daily_rate;
             $this->location = $mission->location ?? '';
             $this->selectedTags = $mission->tags->pluck('id')->toArray();
         }
@@ -46,7 +43,6 @@ class MissionForm extends Component
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:5000'],
-            'daily_rate' => ['required', 'integer', 'min:100', 'max:5000'],
             'location' => ['required', 'string', 'max:255'],
             'selectedTags' => ['array'],
             'selectedTags.*' => ['exists:tags,id'],
@@ -63,9 +59,6 @@ class MissionForm extends Component
             'title.max' => 'Le titre ne peut pas dépasser 255 caractères.',
             'description.required' => 'La description est obligatoire.',
             'description.max' => 'La description ne peut pas dépasser 5000 caractères.',
-            'daily_rate.required' => 'Le TJM est obligatoire.',
-            'daily_rate.min' => 'Le TJM doit être au minimum de 100 €.',
-            'daily_rate.max' => 'Le TJM ne peut pas dépasser 5000 €.',
             'location.required' => 'Le lieu est obligatoire.',
             'location.max' => 'Le lieu ne peut pas dépasser 255 caractères.',
         ];
@@ -88,7 +81,6 @@ class MissionForm extends Component
             $this->mission->update([
                 'title' => $this->title,
                 'description' => $this->description,
-                'daily_rate' => $this->daily_rate,
                 'location' => $this->location,
             ]);
 
@@ -100,7 +92,6 @@ class MissionForm extends Component
                 'commercial_id' => Auth::id(),
                 'title' => $this->title,
                 'description' => $this->description,
-                'daily_rate' => $this->daily_rate,
                 'location' => $this->location,
                 'status' => MissionStatus::Active,
             ]);
