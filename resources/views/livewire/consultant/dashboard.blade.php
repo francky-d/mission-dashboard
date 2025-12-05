@@ -97,8 +97,8 @@
         </div>
 
         {{-- Recommended Missions --}}
-        <div class="card-themed">
-            <div class="p-6">
+        <div class="card-themed h-full">
+            <div class="p-6 h-full flex flex-col">
                 <div class="section-header">
                     <h3 class="section-title">Missions recommandées</h3>
                     <a href="{{ route('consultant.missions.index') }}" wire:navigate class="link-themed text-sm">
@@ -106,40 +106,31 @@
                     </a>
                 </div>
                 @if($recommendedMissions->isEmpty())
-                    <div class="empty-state py-8">
-                        <div class="empty-state-icon">
-                            <x-heroicon-o-briefcase class="w-8 h-8" />
+                    <div class="empty-state py-8 flex-1 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="empty-state-icon">
+                                <x-heroicon-o-briefcase class="w-8 h-8" />
+                            </div>
+                            <p class="text-gray-500">Aucune mission disponible</p>
                         </div>
-                        <p class="text-gray-500">Aucune mission disponible</p>
                     </div>
                 @else
-                    <div class="space-y-4">
+                    <div class="flex-1 flex flex-col gap-4">
                         @foreach($recommendedMissions as $mission)
                             <a href="{{ route('consultant.missions.show', $mission) }}" wire:navigate
-                                class="block p-4 rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all duration-200">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div class="min-w-0 flex-1">
-                                        <h4 class="font-medium text-gray-900 truncate">{{ $mission->title }}</h4>
-                                        <div class="flex items-center gap-3 mt-1 text-sm text-gray-500">
-                                            <span class="flex items-center gap-1">
-                                                <x-heroicon-o-map-pin class="w-4 h-4" />
-                                                {{ $mission->location }}
-                                            </span>
-                                        </div>
-                                        <div class="flex flex-wrap gap-1.5 mt-3">
-                                            @foreach($mission->tags->take(3) as $tag)
-                                                <span class="tag-pill">{{ $tag->name }}</span>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </a>
+                                class="flex-1 flex flex-col p-4 rounded-lg border border-gray-100 hover:border-indigo-200 hover:shadow-md transition-all duration-200 bg-white">
+                                <h4 class="font-semibold text-gray-900">{{ $mission->title }}</h4>
+                                <div class="flex items-center gap-2 mt-2 text-sm text-gray-500">
+                                    <x-heroicon-o-map-pin class="w-4 h-4 flex-shrink-0" />
+                                    <span>{{ $mission->location }}</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5 mt-auto pt-3">
+                                    @foreach($mission->tags->take(3) as $tag)
+                                        <span class="tag-pill">{{ $tag->name }}</span>
+                                    @endforeach
+                                </div>
+                            </a>
                         @endforeach
-                    </div>
-                    <div class="mt-6">
-                        <a href="{{ route('consultant.missions.index') }}" wire:navigate
-                            class="btn-secondary w-full justify-center">
-                            Voir toutes les missions
-                        </a>
                     </div>
                 @endif
             </div>
