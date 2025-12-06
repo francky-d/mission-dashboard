@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
@@ -43,4 +44,44 @@ test('email is not verified with invalid hash', function () {
     $this->actingAs($user)->get($verificationUrl);
 
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+});
+
+test('unverified consultant is redirected to verification page', function () {
+    $user = User::factory()->unverified()->create([
+        'role' => UserRole::Consultant,
+    ]);
+
+    $response = $this->actingAs($user)->get(route('consultant.dashboard'));
+
+    $response->assertRedirect(route('verification.notice'));
+});
+
+test('unverified commercial is redirected to verification page', function () {
+    $user = User::factory()->unverified()->create([
+        'role' => UserRole::Commercial,
+    ]);
+
+    $response = $this->actingAs($user)->get(route('commercial.dashboard'));
+
+    $response->assertRedirect(route('verification.notice'));
+});
+
+test('verified consultant can access dashboard', function () {
+    $user = User::factory()->create([
+        'role' => UserRole::Consultant,
+    ]);
+
+    $response = $this->actingAs($user)->get(route('consultant.dashboard'));
+
+    $response->assertOk();
+});
+
+test('verified commercial can access dashboard', function () {
+    $user = User::factory()->create([
+        'role' => UserRole::Commercial,
+    ]);
+
+    $response = $this->actingAs($user)->get(route('commercial.dashboard'));
+
+    $response->assertOk();
 });
