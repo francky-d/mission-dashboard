@@ -1,135 +1,133 @@
 @php use Illuminate\Support\Facades\Storage; @endphp
-<div class="space-y-6">
-    {{-- Back link --}}
-    <div>
-        <a href="javascript:history.back()"
-            class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-            <x-heroicon-m-arrow-left class="w-4 h-4 mr-2" />
-            {{ __('Retour') }}
-        </a>
-    </div>
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-    {{-- Profile Header --}}
-    <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="p-6">
-            <div class="flex items-start gap-6">
-                {{-- Avatar --}}
-                <div
-                    class="h-20 w-20 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0">
-                    <span class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
-                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                    </span>
-                </div>
+        {{-- Lien retour --}}
+        <div>
+            <a href="javascript:history.back()"
+                class="link-themed inline-flex items-center text-sm font-medium hover:underline">
+                <x-heroicon-m-arrow-left class="w-4 h-4 mr-2" />
+                {{ __('Retour') }}
+            </a>
+        </div>
 
-                <div class="flex-1">
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                        {{ $user->name }}
-                    </h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ $user->email }}
-                    </p>
+        {{-- En-tête profil --}}
+        <div class="card-themed">
+            <div class="p-6 sm:p-8">
+                <div class="flex items-start gap-6">
+                    {{-- Avatar --}}
+                    <div
+                        class="h-20 w-20 rounded-2xl bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] flex items-center justify-center flex-shrink-0 shadow-lg ring-4 ring-slate-100">
+                        <span class="text-3xl font-bold text-white">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </span>
+                    </div>
 
-                    @if($user->consultantProfile)
-                        <div class="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                            @if($user->consultantProfile->experience_years)
-                                <span class="flex items-center">
-                                    <x-heroicon-m-briefcase class="w-4 h-4 mr-1" />
-                                    {{ $user->consultantProfile->experience_years }} {{ __('années d\'expérience') }}
-                                </span>
-                            @endif
-                            @if($user->consultantProfile->cv_url)
-                                <a href="{{ Storage::url($user->consultantProfile->cv_url) }}" target="_blank"
-                                    class="flex items-center text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
-                                    <x-heroicon-m-document-arrow-down class="w-4 h-4 mr-1" />
-                                    {{ __('Télécharger le CV') }}
-                                </a>
-                            @endif
+                    <div class="flex-1">
+                        <h1 class="text-2xl font-bold text-slate-900">
+                            {{ $user->name }}
+                        </h1>
+                        <p class="text-sm text-slate-500">
+                            {{ $user->email }}
+                        </p>
+
+                        @if($user->consultantProfile)
+                            <div class="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-600">
+                                @if($user->consultantProfile->experience_years)
+                                    <span class="flex items-center">
+                                        <x-heroicon-m-briefcase class="w-4 h-4 mr-1.5 text-slate-400" />
+                                        {{ $user->consultantProfile->experience_years }} {{ __('années d\'expérience') }}
+                                    </span>
+                                @endif
+                                @if($user->consultantProfile->cv_url)
+                                    <a href="{{ Storage::url($user->consultantProfile->cv_url) }}" target="_blank"
+                                        class="link-themed inline-flex items-center hover:underline">
+                                        <x-heroicon-m-document-arrow-down class="w-4 h-4 mr-1.5" />
+                                        {{ __('Télécharger le CV') }}
+                                    </a>
+                                @endif
+                            </div>
+                        @endif
+
+                        {{-- Bouton contact --}}
+                        <div class="mt-6">
+                            <a href="{{ route('commercial.messages.index') }}?consultant={{ $user->id }}" wire:navigate
+                                class="btn-primary">
+                                <x-heroicon-m-chat-bubble-left class="w-4 h-4 mr-2" />
+                                {{ __('Contacter') }}
+                            </a>
                         </div>
-                    @endif
-
-                    {{-- Contact Button --}}
-                    <div class="mt-4">
-                        <a href="{{ route('commercial.messages.index') }}?consultant={{ $user->id }}" wire:navigate
-                            class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-                            <x-heroicon-m-chat-bubble-left class="w-4 h-4 mr-2" />
-                            {{ __('Contacter') }}
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    {{-- Skills / Tags --}}
-    @if($user->consultantProfile && $user->consultantProfile->tags->isNotEmpty())
-        <div
-            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    {{ __('Compétences') }}
-                </h2>
-                <div class="flex flex-wrap gap-2">
-                    @foreach($user->consultantProfile->tags as $tag)
-                        <span
-                            class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                            {{ $tag->name }}
-                        </span>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    @endif
-
-    {{-- Bio --}}
-    @if($user->consultantProfile && $user->consultantProfile->bio)
-        <div
-            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    {{ __('Biographie') }}
-                </h2>
-                <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300">
-                    {!! nl2br(e($user->consultantProfile->bio)) !!}
-                </div>
-            </div>
-        </div>
-    @endif
-
-    {{-- Applications to my missions --}}
-    @if($applications->isNotEmpty())
-        <div
-            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    {{ __('Candidatures sur mes missions') }}
-                </h2>
-                <div class="space-y-3">
-                    @foreach($applications as $application)
-                        <div
-                            class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 p-3">
-                            <div>
-                                <a href="{{ route('commercial.missions.show', $application->mission) }}" wire:navigate
-                                    class="text-sm font-medium text-gray-900 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400">
-                                    {{ $application->mission->title }}
-                                </a>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ __('Postulé le') }} {{ $application->created_at->format('d/m/Y') }}
-                                </p>
-                            </div>
-                            <span @class([
-                                'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
-                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' => $application->status === \App\Enums\ApplicationStatus::Pending,
-                                'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' => $application->status === \App\Enums\ApplicationStatus::Viewed,
-                                'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' => $application->status === \App\Enums\ApplicationStatus::Accepted,
-                                'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' => $application->status === \App\Enums\ApplicationStatus::Rejected,
-                            ])>
-                                {{ $application->status->label() }}
+        {{-- Compétences / Tags --}}
+        @if($user->consultantProfile && $user->consultantProfile->tags->isNotEmpty())
+            <div class="card-themed">
+                <div class="p-6 sm:p-8">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">
+                        {{ __('Compétences') }}
+                    </h2>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($user->consultantProfile->tags as $tag)
+                            <span class="tag-pill">
+                                {{ $tag->name }}
                             </span>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
+
+        {{-- Bio --}}
+        @if($user->consultantProfile && $user->consultantProfile->bio)
+            <div class="card-themed">
+                <div class="p-6 sm:p-8">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">
+                        {{ __('Biographie') }}
+                    </h2>
+                    <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-xl">
+                        {!! nl2br(e($user->consultantProfile->bio)) !!}
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- Candidatures sur mes missions --}}
+        @if($applications->isNotEmpty())
+            <div class="card-themed">
+                <div class="p-6 sm:p-8">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">
+                        {{ __('Candidatures sur mes missions') }}
+                    </h2>
+                    <div class="space-y-3">
+                        @foreach($applications as $application)
+                            <div
+                                class="flex items-center justify-between rounded-xl border border-slate-200 p-4 bg-white shadow-sm">
+                                <div>
+                                    <a href="{{ route('commercial.missions.show', $application->mission) }}" wire:navigate
+                                        class="text-sm font-semibold text-slate-900 hover:text-[var(--theme-primary)] transition-colors">
+                                        {{ $application->mission->title }}
+                                    </a>
+                                    <p class="text-xs text-slate-500 mt-1">
+                                        {{ __('Postulé le') }} {{ $application->created_at->translatedFormat('d M Y') }}
+                                    </p>
+                                </div>
+                                <span @class([
+                                    'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold',
+                                    'bg-amber-100 text-amber-800' => $application->status === \App\Enums\ApplicationStatus::Pending,
+                                    'bg-sky-100 text-sky-800' => $application->status === \App\Enums\ApplicationStatus::Viewed,
+                                    'bg-emerald-100 text-emerald-800' => $application->status === \App\Enums\ApplicationStatus::Accepted,
+                                    'bg-rose-100 text-rose-800' => $application->status === \App\Enums\ApplicationStatus::Rejected,
+                                ])>
+                                    {{ $application->status->label() }}
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
 </div>

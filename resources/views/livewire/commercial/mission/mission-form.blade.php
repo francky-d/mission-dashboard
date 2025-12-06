@@ -1,83 +1,95 @@
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-    <form wire:submit="save" class="p-6 space-y-6">
+<div class="card-themed">
+    <form wire:submit="save" class="p-6 sm:p-8 space-y-6">
         {{-- Titre --}}
         <div>
-            <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label for="title" class="block text-sm font-semibold text-slate-900 mb-2">
                 {{ __('Titre de la mission') }} <span class="text-red-500">*</span>
             </label>
             <input type="text" id="title" wire:model="title"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+                class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-[var(--theme-primary)] focus:ring-[var(--theme-primary)] text-slate-900 placeholder-slate-400 sm:text-sm"
                 placeholder="Ex: Développeur Laravel Senior" />
             @error('title')
-                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                <p class="mt-2 text-sm text-red-600 flex items-center">
+                    <x-heroicon-m-exclamation-circle class="w-4 h-4 mr-1" />
+                    {{ $message }}
+                </p>
             @enderror
         </div>
 
         {{-- Description --}}
         <div>
-            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label for="description" class="block text-sm font-semibold text-slate-900 mb-2">
                 {{ __('Description') }} <span class="text-red-500">*</span>
             </label>
             <textarea id="description" wire:model="description" rows="6"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+                class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-[var(--theme-primary)] focus:ring-[var(--theme-primary)] text-slate-900 placeholder-slate-400 sm:text-sm"
                 placeholder="Décrivez la mission, les compétences requises, le contexte..."></textarea>
             @error('description')
-                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                <p class="mt-2 text-sm text-red-600 flex items-center">
+                    <x-heroicon-m-exclamation-circle class="w-4 h-4 mr-1" />
+                    {{ $message }}
+                </p>
             @enderror
         </div>
 
         {{-- Lieu --}}
         <div>
-            <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label for="location" class="block text-sm font-semibold text-slate-900 mb-2">
                 {{ __('Lieu') }} <span class="text-red-500">*</span>
             </label>
             <input type="text" id="location" wire:model="location"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
+                class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-[var(--theme-primary)] focus:ring-[var(--theme-primary)] text-slate-900 placeholder-slate-400 sm:text-sm"
                 placeholder="Paris, Remote, Lyon..." />
             @error('location')
-                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                <p class="mt-2 text-sm text-red-600 flex items-center">
+                    <x-heroicon-m-exclamation-circle class="w-4 h-4 mr-1" />
+                    {{ $message }}
+                </p>
             @enderror
         </div>
 
         {{-- Tags --}}
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label class="block text-sm font-semibold text-slate-900 mb-3">
                 {{ __('Compétences requises') }}
             </label>
             <div class="flex flex-wrap gap-2">
                 @forelse($tags as $tag)
                     <button type="button" wire:click="toggleTag({{ $tag->id }})" @class([
-                        'inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium transition-colors',
-                        'bg-indigo-600 text-white' => in_array($tag->id, $selectedTags),
-                        'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' => !in_array($tag->id, $selectedTags),
+                        'inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-all duration-200',
+                        'bg-[var(--theme-primary)] text-white shadow-md' => in_array($tag->id, $selectedTags),
+                        'bg-white text-slate-700 hover:bg-slate-50 border border-slate-300' => !in_array($tag->id, $selectedTags),
                     ])>
                         @if(in_array($tag->id, $selectedTags))
-                            <x-heroicon-m-check class="w-4 h-4 mr-1" />
+                            <x-heroicon-m-check class="w-4 h-4 mr-1.5" />
                         @endif
                         {{ $tag->name }}
                     </button>
                 @empty
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="text-sm text-slate-500 italic">
                         {{ __('Aucun tag disponible.') }}
                     </p>
                 @endforelse
             </div>
             @error('selectedTags')
-                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                <p class="mt-2 text-sm text-red-600 flex items-center">
+                    <x-heroicon-m-exclamation-circle class="w-4 h-4 mr-1" />
+                    {{ $message }}
+                </p>
             @enderror
         </div>
 
         {{-- Actions --}}
-        <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between pt-6 border-t border-slate-200">
             <a href="{{ route('commercial.missions.index') }}" wire:navigate
-                class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                class="link-themed inline-flex items-center text-sm font-medium hover:underline">
                 <x-heroicon-m-arrow-left class="w-4 h-4 mr-2" />
                 {{ __('Retour') }}
             </a>
 
             <button type="submit" wire:loading.attr="disabled"
-                class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed">
-                <span wire:loading.remove wire:target="save">
+                class="btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                <span wire:loading.remove wire:target="save" class="flex items-center">
                     @if($isEditing)
                         <x-heroicon-m-check class="w-4 h-4 mr-2" />
                         {{ __('Mettre à jour') }}

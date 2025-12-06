@@ -5,6 +5,7 @@ namespace App\Livewire\Commercial\Mission;
 use App\Enums\ApplicationStatus;
 use App\Models\Application;
 use App\Models\Mission;
+use App\Models\User;
 use App\Notifications\ApplicationStatusChanged;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -23,6 +24,10 @@ class MissionShow extends Component
     #[Url]
     public string $applicationStatus = '';
 
+    public bool $showProfileModal = false;
+
+    public ?User $selectedConsultant = null;
+
     public function mount(Mission $mission): void
     {
         // Ensure the commercial owns this mission
@@ -34,6 +39,28 @@ class MissionShow extends Component
     public function updatedApplicationStatus(): void
     {
         $this->resetPage();
+    }
+
+    public function showConsultantProfile(int $consultantId): void
+    {
+        $this->selectedConsultant = User::with(['consultantProfile', 'tags'])->find($consultantId);
+        $this->showProfileModal = true;
+    }
+
+    public function closeProfileModal(): void
+    {
+        $this->showProfileModal = false;
+        $this->selectedConsultant = null;
+    }
+
+    public function acceptApplication(int $applicationId): void
+    {
+        $this->updateApplicationStatus($applicationId, ApplicationStatus::Accepted->value);
+    }
+
+    public function rejectApplication(int $applicationId): void
+    {
+        $this->updateApplicationStatus($applicationId, ApplicationStatus::Rejected->value);
     }
 
     public function updateApplicationStatus(int $applicationId, string $newStatus): void

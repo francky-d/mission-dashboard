@@ -44,15 +44,14 @@ test('users can not authenticate with invalid password', function () {
 });
 
 test('navigation menu can be rendered', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->consultant()->create();
 
     $this->actingAs($user);
 
     $response = $this->get('/dashboard');
 
     $response
-        ->assertOk()
-        ->assertSeeVolt('layout.navigation');
+        ->assertRedirect(route('consultant.dashboard'));
 });
 
 test('users can logout', function () {

@@ -76,16 +76,15 @@ it('displays application date', function () {
     $consultant = User::factory()->consultant()->create();
     $mission = Mission::factory()->create();
 
-    Application::create([
+    $application = Application::create([
         'mission_id' => $mission->id,
         'consultant_id' => $consultant->id,
         'status' => ApplicationStatus::Pending,
-        'created_at' => now()->setDate(2025, 12, 1)->setTime(10, 30),
     ]);
 
     Livewire::actingAs($consultant)
         ->test(ApplicationList::class)
-        ->assertSee('01/12/2025');
+        ->assertSee($application->created_at->format('d/m/Y'));
 });
 
 it('displays application status', function () {

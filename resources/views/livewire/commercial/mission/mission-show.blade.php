@@ -1,256 +1,351 @@
-<div class="space-y-6">
-    {{-- Retour à la liste --}}
-    <div>
-        <a href="{{ route('commercial.missions.index') }}" wire:navigate
-            class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-            <x-heroicon-m-arrow-left class="w-4 h-4 mr-2" />
-            {{ __('Retour aux missions') }}
-        </a>
-    </div>
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    {{-- En-tête de la mission --}}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="p-6">
-            <div class="flex items-start justify-between">
-                <div class="flex-1">
-                    <div class="flex items-center gap-3">
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        {{-- Bouton retour --}}
+        <div class="mb-6">
+            <a href="{{ route('commercial.dashboard') }}" class="link-themed inline-flex items-center text-sm font-medium hover:underline">
+                <x-heroicon-o-arrow-left class="w-4 h-4 mr-2" />
+                {{ __('Retour au tableau de bord') }}
+            </a>
+        </div>
+
+        {{-- Carte principale de la mission --}}
+        <div class="card-themed mb-8">
+            <div class="p-6 sm:p-8">
+                {{-- En-tête avec titre et statut --}}
+                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+                    <div class="flex-1">
+                        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
                             {{ $mission->title }}
                         </h1>
-                        <span @class([
-                            'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
-                            'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' => $mission->status === \App\Enums\MissionStatus::Active,
-                            'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400' => $mission->status === \App\Enums\MissionStatus::Archived,
-                        ])>
+                        <div class="flex flex-wrap items-center gap-4 text-sm text-slate-600">
+                            @if($mission->location)
+                                <p class="flex items-center">
+                                    <x-heroicon-o-map-pin class="w-4 h-4 mr-1.5 text-slate-400" />
+                                    {{ $mission->location }}
+                                </p>
+                            @endif
+                            <p class="flex items-center">
+                                <x-heroicon-o-calendar class="w-4 h-4 mr-1.5 text-slate-400" />
+                                {{ __('Créée le') }} {{ $mission->created_at->translatedFormat('d F Y') }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="shrink-0">
+                        <span class="badge-themed inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold">
                             {{ $mission->status->label() }}
                         </span>
                     </div>
-                    <div class="mt-2 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                        @if($mission->location)
-                            <div class="flex items-center">
-                                <x-heroicon-m-map-pin class="w-4 h-4 mr-1" />
-                                {{ $mission->location }}
-                            </div>
-                        @endif
-                        <div class="flex items-center">
-                            <x-heroicon-m-calendar class="w-4 h-4 mr-1" />
-                            {{ __('Publiée le') }} {{ $mission->created_at->format('d/m/Y') }}
-                        </div>
+                </div>
+
+                {{-- Description --}}
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-3">{{ __('Description') }}</h2>
+                    <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed">
+                        {!! nl2br(e($mission->description)) !!}
                     </div>
                 </div>
-                <div>
-                    <a href="{{ route('commercial.missions.edit', $mission) }}" wire:navigate
-                        class="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-                        <x-heroicon-m-pencil class="w-4 h-4 mr-2" />
-                        {{ __('Modifier') }}
-                    </a>
-                </div>
-            </div>
 
-            @if($mission->tags->isNotEmpty())
-                <div class="mt-4 flex flex-wrap gap-2">
-                    @foreach($mission->tags as $tag)
-                        <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                            {{ $tag->name }}
-                        </span>
-                    @endforeach
-                </div>
-            @endif
+                {{-- Tags --}}
+                @if($mission->tags->isNotEmpty())
+                    <div class="pt-6 border-t border-slate-200">
+                        <h2 class="text-lg font-semibold text-slate-900 mb-3">{{ __('Compétences requises') }}</h2>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($mission->tags as $tag)
+                                <span class="tag-pill">
+                                    {{ $tag->name }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
         </div>
-    </div>
 
-    {{-- Candidatures Section --}}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="p-6">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {{ __('Candidatures') }}
-            </h2>
-
-            {{-- Status Filter Tabs --}}
-            <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
-                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                    <button type="button" wire:click="$set('applicationStatus', '')" @class([
-                        'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
-                        'border-indigo-500 text-indigo-600 dark:text-indigo-400' => $applicationStatus === '',
-                        'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' => $applicationStatus !== '',
-                    ])>
-                        {{ __('Toutes') }}
-                        <span class="ml-2 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                            {{ array_sum($statusCounts) }}
-                        </span>
-                    </button>
-
-                    @foreach($statuses as $statusOption)
-                        <button type="button" wire:click="$set('applicationStatus', '{{ $statusOption->value }}')" @class([
-                            'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
-                            'border-indigo-500 text-indigo-600 dark:text-indigo-400' => $applicationStatus === $statusOption->value,
-                            'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' => $applicationStatus !== $statusOption->value,
-                        ])>
-                            {{ $statusOption->label() }}
-                            <span @class([
-                                'ml-2 rounded-full px-2.5 py-0.5 text-xs font-medium',
-                                'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400' => $statusOption === \App\Enums\ApplicationStatus::Pending,
-                                'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' => $statusOption === \App\Enums\ApplicationStatus::Viewed,
-                                'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' => $statusOption === \App\Enums\ApplicationStatus::Accepted,
-                                'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' => $statusOption === \App\Enums\ApplicationStatus::Rejected,
-                            ])>
-                                {{ $statusCounts[$statusOption->value] ?? 0 }}
-                            </span>
-                        </button>
-                    @endforeach
-                </nav>
-            </div>
-
-            {{-- Applications List --}}
-            @if($applications->isEmpty())
-                <div class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center dark:border-gray-600">
-                    <x-heroicon-o-users class="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-gray-100">
-                        {{ __('Aucune candidature') }}
-                    </h3>
-                    <p class="mt-2 text-gray-500 dark:text-gray-400">
-                        @if($applicationStatus)
-                            {{ __('Aucune candidature avec ce statut.') }}
-                        @else
-                            {{ __('Aucun consultant n\'a encore postulé à cette mission.') }}
-                        @endif
-                    </p>
+        {{-- Section des candidatures --}}
+        <div class="card-themed">
+            <div class="p-6 sm:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-slate-900">
+                        {{ __('Candidatures') }}
+                    </h2>
+                    <span class="text-sm text-slate-500 font-medium">
+                        {{ $applications->total() }} {{ __('candidat(s)') }}
+                    </span>
                 </div>
-            @else
-                <div class="space-y-4">
-                    @foreach($applications as $application)
-                        <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
-                            <div class="flex items-start justify-between">
-                                <div class="flex items-start gap-4">
-                                    {{-- Avatar --}}
-                                    <div class="h-12 w-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0">
-                                        <span class="text-lg font-semibold text-indigo-600 dark:text-indigo-400">
-                                            {{ strtoupper(substr($application->consultant->name, 0, 1)) }}
-                                        </span>
-                                    </div>
 
-                                    <div>
-                                        <a href="{{ route('commercial.consultants.show', $application->consultant) }}" wire:navigate
-                                            class="text-base font-semibold text-gray-900 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400">
-                                            {{ $application->consultant->name }}
-                                        </a>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                                            {{ $application->consultant->email }}
-                                        </p>
+                {{-- Onglets de filtre par statut --}}
+                <div class="mb-6">
+                    <nav class="flex flex-wrap gap-2" role="tablist">
+                        <button
+                            wire:click="$set('applicationStatus', '')"
+                            type="button"
+                            role="tab"
+                            aria-selected="{{ $applicationStatus === '' ? 'true' : 'false' }}"
+                            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                                {{ $applicationStatus === ''
+                                    ? 'bg-[var(--theme-primary)] text-white shadow-md'
+                                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' }}"
+                        >
+                            {{ __('Tous') }}
+                        </button>
 
-                                        @if($application->consultant->consultantProfile)
-                                            <div class="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                                @if($application->consultant->consultantProfile->experience_years)
-                                                    <span class="flex items-center">
-                                                        <x-heroicon-m-briefcase class="w-4 h-4 mr-1" />
-                                                        {{ $application->consultant->consultantProfile->experience_years }} {{ __('ans d\'exp.') }}
-                                                    </span>
-                                                @endif
-                                                @if($application->consultant->consultantProfile->cv_url)
-                                                    <a href="{{ Storage::url($application->consultant->consultantProfile->cv_url) }}" target="_blank"
-                                                        class="flex items-center text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
-                                                        <x-heroicon-m-document class="w-4 h-4 mr-1" />
-                                                        {{ __('Voir le CV') }}
-                                                    </a>
+                        @foreach(\App\Enums\ApplicationStatus::cases() as $status)
+                            <button
+                                wire:click="$set('applicationStatus', '{{ $status->value }}')"
+                                type="button"
+                                role="tab"
+                                aria-selected="{{ $applicationStatus === $status->value ? 'true' : 'false' }}"
+                                class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                                    {{ $applicationStatus === $status->value
+                                        ? 'bg-[var(--theme-primary)] text-white shadow-md'
+                                        : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' }}"
+                            >
+                                {{ $status->label() }}
+                            </button>
+                        @endforeach
+                    </nav>
+                </div>
+
+                {{-- Liste des candidatures --}}
+                @if($applications->isEmpty())
+                    <div class="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+                        <x-heroicon-o-user-group class="mx-auto h-12 w-12 text-slate-400" />
+                        <h3 class="mt-3 text-lg font-semibold text-slate-700">{{ __('Aucune candidature') }}</h3>
+                        <p class="mt-1 text-sm text-slate-500">
+                            {{ $applicationStatus
+                                ? __('Aucune candidature avec ce statut.')
+                                : __('Aucun consultant n\'a encore postulé à cette mission.') }}
+                        </p>
+                    </div>
+                @else
+                    <div class="space-y-4">
+                        @foreach($applications as $application)
+                            <div class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+                                <div class="p-5">
+                                    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                                        {{-- Avatar et infos consultant --}}
+                                        <div class="flex items-center gap-4 flex-1 min-w-0">
+                                            <div class="shrink-0">
+                                                @if($application->consultant->profile_photo_path)
+                                                    <img
+                                                        src="{{ Storage::url($application->consultant->profile_photo_path) }}"
+                                                        alt="{{ $application->consultant->name }}"
+                                                        class="w-14 h-14 rounded-full object-cover ring-2 ring-slate-100"
+                                                    />
+                                                @else
+                                                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] flex items-center justify-center ring-2 ring-slate-100">
+                                                        <span class="text-lg font-bold text-white">
+                                                            {{ strtoupper(substr($application->consultant->name, 0, 2)) }}
+                                                        </span>
+                                                    </div>
                                                 @endif
                                             </div>
 
-                                            @if($application->consultant->consultantProfile->tags->isNotEmpty())
-                                                <div class="mt-2 flex flex-wrap gap-1">
-                                                    @foreach($application->consultant->consultantProfile->tags as $tag)
-                                                        <span @class([
-                                                            'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
-                                                            'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' => $mission->tags->contains($tag->id),
-                                                            'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' => !$mission->tags->contains($tag->id),
-                                                        ])>
-                                                            @if($mission->tags->contains($tag->id))
-                                                                <x-heroicon-m-check class="w-3 h-3 mr-0.5" />
-                                                            @endif
-                                                            {{ $tag->name }}
-                                                        </span>
-                                                    @endforeach
-                                                </div>
-                                            @endif
-                                        @endif
+                                            <div class="flex-1 min-w-0">
+                                                <h3 class="text-lg font-semibold text-slate-900 truncate">
+                                                    {{ $application->consultant->name }}
+                                                </h3>
+                                                <p class="text-sm text-slate-500 truncate">
+                                                    {{ $application->consultant->email }}
+                                                </p>
+                                                <p class="text-xs text-slate-400 mt-1">
+                                                    {{ __('Postulé le') }} {{ $application->created_at->translatedFormat('d M Y à H:i') }}
+                                                </p>
+                                            </div>
+                                        </div>
 
-                                        <p class="mt-2 text-xs text-gray-400 dark:text-gray-500">
-                                            {{ __('Candidature reçue le') }} {{ $application->created_at->format('d/m/Y à H:i') }}
-                                        </p>
+                                        {{-- Statut et actions --}}
+                                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                                            {{-- Badge statut --}}
+                                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold
+                                                @switch($application->status->value)
+                                                    @case('pending')
+                                                        bg-amber-100 text-amber-800
+                                                        @break
+                                                    @case('accepted')
+                                                        bg-emerald-100 text-emerald-800
+                                                        @break
+                                                    @case('rejected')
+                                                        bg-red-100 text-red-800
+                                                        @break
+                                                    @default
+                                                        bg-slate-100 text-slate-800
+                                                @endswitch
+                                            ">
+                                                {{ $application->status->label() }}
+                                            </span>
+
+                                            {{-- Boutons d'action --}}
+                                            <div class="flex items-center gap-2">
+                                                {{-- Voir profil --}}
+                                                <button
+                                                    wire:click="showConsultantProfile({{ $application->consultant->id }})"
+                                                    type="button"
+                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--theme-primary)] transition-colors"
+                                                    title="{{ __('Voir le profil') }}"
+                                                >
+                                                    <x-heroicon-o-eye class="w-4 h-4 sm:mr-1.5" />
+                                                    <span class="hidden sm:inline">{{ __('Profil') }}</span>
+                                                </button>
+
+                                                {{-- Actions selon statut --}}
+                                                @if($application->status->value === 'pending')
+                                                    <button
+                                                        wire:click="acceptApplication({{ $application->id }})"
+                                                        wire:confirm="{{ __('Êtes-vous sûr de vouloir accepter cette candidature ?') }}"
+                                                        type="button"
+                                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
+                                                        title="{{ __('Accepter') }}"
+                                                    >
+                                                        <x-heroicon-o-check class="w-4 h-4 sm:mr-1.5" />
+                                                        <span class="hidden sm:inline">{{ __('Accepter') }}</span>
+                                                    </button>
+
+                                                    <button
+                                                        wire:click="rejectApplication({{ $application->id }})"
+                                                        wire:confirm="{{ __('Êtes-vous sûr de vouloir refuser cette candidature ?') }}"
+                                                        type="button"
+                                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                                                        title="{{ __('Refuser') }}"
+                                                    >
+                                                        <x-heroicon-o-x-mark class="w-4 h-4 sm:mr-1.5" />
+                                                        <span class="hidden sm:inline">{{ __('Refuser') }}</span>
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="flex flex-col items-end gap-2">
-                                    {{-- Current Status Badge --}}
-                                    <span @class([
-                                        'inline-flex items-center rounded-full px-3 py-1 text-sm font-medium',
-                                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' => $application->status === \App\Enums\ApplicationStatus::Pending,
-                                        'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' => $application->status === \App\Enums\ApplicationStatus::Viewed,
-                                        'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' => $application->status === \App\Enums\ApplicationStatus::Accepted,
-                                        'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' => $application->status === \App\Enums\ApplicationStatus::Rejected,
-                                    ])>
-                                        {{ $application->status->label() }}
-                                    </span>
-
-                                    {{-- Status Actions --}}
-                                    <div class="flex items-center gap-1">
-                                        @if($application->status !== \App\Enums\ApplicationStatus::Viewed)
-                                            <button
-                                                type="button"
-                                                wire:click="updateApplicationStatus({{ $application->id }}, 'viewed')"
-                                                class="inline-flex items-center rounded px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
-                                                title="{{ __('Marquer comme consulté') }}"
-                                            >
-                                                <x-heroicon-m-eye class="w-4 h-4" />
-                                            </button>
-                                        @endif
-
-                                        @if($application->status !== \App\Enums\ApplicationStatus::Accepted)
-                                            <button
-                                                type="button"
-                                                wire:click="updateApplicationStatus({{ $application->id }}, 'accepted')"
-                                                class="inline-flex items-center rounded px-2 py-1 text-xs font-medium text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/30"
-                                                title="{{ __('Accepter') }}"
-                                            >
-                                                <x-heroicon-m-check class="w-4 h-4" />
-                                            </button>
-                                        @endif
-
-                                        @if($application->status !== \App\Enums\ApplicationStatus::Rejected)
-                                            <button
-                                                type="button"
-                                                wire:click="updateApplicationStatus({{ $application->id }}, 'rejected')"
-                                                class="inline-flex items-center rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
-                                                title="{{ __('Refuser') }}"
-                                            >
-                                                <x-heroicon-m-x-mark class="w-4 h-4" />
-                                            </button>
-                                        @endif
-                                    </div>
-
-                                    {{-- Actions --}}
-                                    <div class="flex items-center gap-2 mt-2">
-                                        <a href="{{ route('commercial.consultants.show', $application->consultant) }}" wire:navigate
-                                            class="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-                                            <x-heroicon-m-user class="w-3.5 h-3.5 mr-1" />
-                                            {{ __('Profil') }}
-                                        </a>
-                                        <a href="{{ route('commercial.messages.index') }}?user={{ $application->consultant->id }}" wire:navigate
-                                            class="inline-flex items-center rounded-md bg-indigo-100 px-2.5 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50">
-                                            <x-heroicon-m-chat-bubble-left class="w-3.5 h-3.5 mr-1" />
-                                            {{ __('Contacter') }}
-                                        </a>
-                                    </div>
+                                    {{-- Message de motivation si présent --}}
+                                    @if($application->motivation)
+                                        <div class="mt-4 pt-4 border-t border-slate-100">
+                                            <p class="text-sm font-medium text-slate-700 mb-2">{{ __('Message de motivation :') }}</p>
+                                            <p class="text-sm text-slate-600 bg-slate-50 p-3 rounded-lg">
+                                                {{ $application->motivation }}
+                                            </p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                {{-- Pagination --}}
-                <div class="mt-6">
-                    {{ $applications->links() }}
-                </div>
-            @endif
+                        @endforeach
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
+
+    {{-- Modal profil consultant --}}
+    @if($showProfileModal && $selectedConsultant)
+        <div
+            class="fixed inset-0 z-50 overflow-y-auto"
+            aria-labelledby="modal-title"
+            role="dialog"
+            aria-modal="true"
+        >
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                {{-- Overlay --}}
+                <div
+                    wire:click="closeProfileModal"
+                    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+                    aria-hidden="true"
+                ></div>
+
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                {{-- Contenu modal --}}
+                <div class="relative inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                    {{-- Header --}}
+                    <div class="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-secondary)] px-6 py-5">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-white" id="modal-title">
+                                {{ __('Profil du consultant') }}
+                            </h3>
+                            <button
+                                wire:click="closeProfileModal"
+                                type="button"
+                                class="text-white/80 hover:text-white transition-colors"
+                            >
+                                <x-heroicon-o-x-mark class="w-6 h-6" />
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Body --}}
+                    <div class="px-6 py-6">
+                        <div class="flex flex-col sm:flex-row gap-6">
+                            {{-- Photo --}}
+                            <div class="shrink-0 text-center sm:text-left">
+                                @if($selectedConsultant->profile_photo_path)
+                                    <img
+                                        src="{{ Storage::url($selectedConsultant->profile_photo_path) }}"
+                                        alt="{{ $selectedConsultant->name }}"
+                                        class="w-28 h-28 rounded-2xl object-cover mx-auto sm:mx-0 shadow-lg ring-4 ring-slate-100"
+                                    />
+                                @else
+                                    <div class="w-28 h-28 rounded-2xl bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] flex items-center justify-center mx-auto sm:mx-0 shadow-lg ring-4 ring-slate-100">
+                                        <span class="text-3xl font-bold text-white">
+                                            {{ strtoupper(substr($selectedConsultant->name, 0, 2)) }}
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
+
+                            {{-- Infos --}}
+                            <div class="flex-1 text-center sm:text-left">
+                                <h4 class="text-2xl font-bold text-slate-900">
+                                    {{ $selectedConsultant->name }}
+                                </h4>
+                                <p class="text-slate-600 mt-1">
+                                    {{ $selectedConsultant->email }}
+                                </p>
+
+                                @if($selectedConsultant->consultantProfile)
+                                    @if($selectedConsultant->consultantProfile->title)
+                                        <p class="text-[var(--theme-primary)] font-semibold mt-3">
+                                            {{ $selectedConsultant->consultantProfile->title }}
+                                        </p>
+                                    @endif
+
+                                    @if($selectedConsultant->consultantProfile->bio)
+                                        <div class="mt-4 p-4 bg-slate-50 rounded-xl">
+                                            <p class="text-sm font-medium text-slate-700 mb-2">{{ __('Bio') }}</p>
+                                            <p class="text-sm text-slate-600 leading-relaxed">
+                                                {{ $selectedConsultant->consultantProfile->bio }}
+                                            </p>
+                                        </div>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- Compétences --}}
+                        @if($selectedConsultant->tags && $selectedConsultant->tags->isNotEmpty())
+                            <div class="mt-6 pt-6 border-t border-slate-200">
+                                <p class="text-sm font-semibold text-slate-700 mb-3">{{ __('Compétences') }}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($selectedConsultant->tags as $tag)
+                                        <span class="tag-pill">
+                                            {{ $tag->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Footer --}}
+                    <div class="bg-slate-50 px-6 py-4 flex justify-end">
+                        <button
+                            wire:click="closeProfileModal"
+                            type="button"
+                            class="btn-primary"
+                        >
+                            {{ __('Fermer') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
