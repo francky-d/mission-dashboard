@@ -56,7 +56,7 @@ describe('Consultant Authentication', function () {
 
         $component
             ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            ->assertRedirect(route('consultant.dashboard', absolute: false));
 
         $this->assertAuthenticated();
 
@@ -119,7 +119,7 @@ describe('Commercial Authentication', function () {
 
         $component
             ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            ->assertRedirect(route('commercial.dashboard', absolute: false));
 
         $this->assertAuthenticated();
 
@@ -148,18 +148,17 @@ describe('Landing Page', function () {
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Je suis Consultant');
-        $response->assertSee('Je suis Commercial');
+        $response->assertSee('Espace Consultant');
+        $response->assertSee('Espace Commercial');
     });
 
     test('landing page has links to role-specific auth pages', function () {
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee(route('consultant.register'));
-        $response->assertSee(route('consultant.login'));
-        $response->assertSee(route('commercial.register'));
-        $response->assertSee(route('commercial.login'));
+        // La nouvelle landing page simplifiée utilise le bouton générique d'inscription
+        $response->assertSee(route('register'));
+        $response->assertSee(route('login'));
     });
 
     test('landing page displays site settings colors', function () {

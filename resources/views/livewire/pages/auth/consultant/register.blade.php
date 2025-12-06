@@ -38,7 +38,7 @@ new #[Layout('layouts.guest', ['theme' => 'consultant'])] class extends Componen
 
         Auth::login($user);
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('consultant.dashboard', absolute: false), navigate: true);
     }
 }; ?>
 

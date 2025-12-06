@@ -38,7 +38,7 @@ new #[Layout('layouts.guest', ['theme' => 'commercial'])] class extends Componen
 
         Auth::login($user);
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('commercial.dashboard', absolute: false), navigate: true);
     }
 }; ?>
 

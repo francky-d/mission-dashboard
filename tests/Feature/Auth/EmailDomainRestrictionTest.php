@@ -9,7 +9,7 @@ describe('Registration Email Domain Restriction', function () {
         AllowedEmailDomain::factory()->create(['domain' => 'company.com', 'is_active' => true]);
         AllowedEmailDomain::clearCache();
 
-        Volt::test('pages.auth.register')
+        Volt::test('pages.auth.consultant.register')
             ->set('name', 'Test User')
             ->set('email', 'user@company.com')
             ->set('password', 'password')
@@ -26,7 +26,7 @@ describe('Registration Email Domain Restriction', function () {
         AllowedEmailDomain::factory()->create(['domain' => 'allowed.com', 'is_active' => true]);
         AllowedEmailDomain::clearCache();
 
-        Volt::test('pages.auth.register')
+        Volt::test('pages.auth.consultant.register')
             ->set('name', 'Test User')
             ->set('email', 'user@notallowed.com')
             ->set('password', 'password')
@@ -43,7 +43,7 @@ describe('Registration Email Domain Restriction', function () {
         AllowedEmailDomain::query()->delete();
         AllowedEmailDomain::clearCache();
 
-        Volt::test('pages.auth.register')
+        Volt::test('pages.auth.consultant.register')
             ->set('name', 'Test User')
             ->set('email', 'anyone@anycompany.com')
             ->set('password', 'password')
@@ -61,7 +61,7 @@ describe('Registration Email Domain Restriction', function () {
         AllowedEmailDomain::factory()->create(['domain' => 'active.com', 'is_active' => true]);
         AllowedEmailDomain::clearCache();
 
-        Volt::test('pages.auth.register')
+        Volt::test('pages.auth.consultant.register')
             ->set('name', 'Test User')
             ->set('email', 'user@inactive.com')
             ->set('password', 'password')
@@ -75,7 +75,7 @@ describe('Registration Email Domain Restriction', function () {
         AllowedEmailDomain::factory()->create(['domain' => 'company2.com', 'is_active' => true]);
         AllowedEmailDomain::clearCache();
 
-        Volt::test('pages.auth.register')
+        Volt::test('pages.auth.consultant.register')
             ->set('name', 'User 1')
             ->set('email', 'user1@company1.com')
             ->set('password', 'password')
@@ -85,7 +85,7 @@ describe('Registration Email Domain Restriction', function () {
 
         $this->assertDatabaseHas('users', ['email' => 'user1@company1.com']);
 
-        Volt::test('pages.auth.register')
+        Volt::test('pages.auth.consultant.register')
             ->set('name', 'User 2')
             ->set('email', 'user2@company2.com')
             ->set('password', 'password')
