@@ -5,6 +5,7 @@ namespace App\Livewire\Consultant\Message;
 use App\Events\MessageSent;
 use App\Models\Message;
 use App\Models\User;
+use App\Notifications\NewMessageReceived;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -40,11 +41,16 @@ class ChatBox extends Component
             return;
         }
 
-        Message::query()
+        $updated = Message::query()
             ->where('sender_id', $this->receiverId)
             ->where('receiver_id', Auth::id())
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
+
+        // Dispatch event to update unread count in navigation
+        if ($updated > 0) {
+            $this->dispatch('messages-read');
+        }
     }
 
     #[Computed]
@@ -97,6 +103,12 @@ class ChatBox extends Component
         // Broadcast the message to the receiver
         broadcast(new MessageSent($message))->toOthers();
 
+        // Send notification to the receiver
+        $receiver = User::find($this->receiverId);
+        if ($receiver) {
+            $receiver->notify(new NewMessageReceived($message));
+        }
+
         // Notify conversation list to refresh
         $this->dispatch('message-sent');
     }
@@ -107,6 +119,9 @@ class ChatBox extends Component
         if (isset($data['message']['sender_id']) && $data['message']['sender_id'] === $this->receiverId) {
             $this->markMessagesAsRead();
         }
+
+        // Dispatch event to refresh navigation unread count
+        $this->dispatch('messages-read');
     }
 
     /**
@@ -120,6 +135,7 @@ class ChatBox extends Component
             return [
                 'conversation-selected' => 'loadConversation',
                 "echo-private:messages.{$userId},MessageSent" => 'receiveMessage',
+                'messages-read' => '$refresh',
             ];
         }
 

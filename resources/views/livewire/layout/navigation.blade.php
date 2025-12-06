@@ -29,6 +29,25 @@ new class extends Component
             ->whereNull('read_at')
             ->count();
     }
+
+    /**
+     * Get the listeners for the component.
+     *
+     * @return array<string, string>
+     */
+    public function getListeners(): array
+    {
+        $userId = auth()->id();
+
+        if ($userId) {
+            return [
+                "echo-private:messages.{$userId},MessageSent" => '$refresh',
+                'messages-read' => '$refresh',
+            ];
+        }
+
+        return [];
+    }
 }; ?>
 
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-200 sticky top-0 z-50">

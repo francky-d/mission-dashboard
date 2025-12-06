@@ -39,12 +39,14 @@ class ConversationList extends Component
         if ($userId) {
             return [
                 'message-sent' => 'refreshConversations',
+                'messages-read' => 'refreshConversations',
                 "echo-private:messages.{$userId},MessageSent" => 'refreshConversations',
             ];
         }
 
         return [
             'message-sent' => 'refreshConversations',
+            'messages-read' => 'refreshConversations',
         ];
     }
 

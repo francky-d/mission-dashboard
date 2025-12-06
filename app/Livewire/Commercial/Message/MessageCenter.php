@@ -57,11 +57,16 @@ class MessageCenter extends Component
             return;
         }
 
-        Message::query()
+        $updated = Message::query()
             ->where('sender_id', $this->consultant)
             ->where('receiver_id', Auth::id())
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
+
+        // Dispatch event to update unread count in navigation
+        if ($updated > 0) {
+            $this->dispatch('messages-read');
+        }
     }
 
     #[Computed]
@@ -200,6 +205,9 @@ class MessageCenter extends Component
         if (isset($data['message']['sender_id']) && $data['message']['sender_id'] === $this->consultant) {
             $this->markMessagesAsRead();
         }
+
+        // Dispatch event to refresh navigation unread count
+        $this->dispatch('messages-read');
     }
 
     /**
@@ -212,6 +220,7 @@ class MessageCenter extends Component
         if ($userId) {
             return [
                 "echo-private:messages.{$userId},MessageSent" => 'receiveMessage',
+                'messages-read' => '$refresh',
             ];
         }
 
