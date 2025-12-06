@@ -6,6 +6,7 @@ use App\Enums\MissionStatus;
 use App\Models\Mission;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -23,6 +24,8 @@ class MissionForm extends Component
 
     /** @var array<int> */
     public array $selectedTags = [];
+
+    public string $newTagName = '';
 
     public function mount(?Mission $mission = null): void
     {
@@ -71,6 +74,35 @@ class MissionForm extends Component
         } else {
             $this->selectedTags[] = $tagId;
         }
+    }
+
+    public function addTag(): void
+    {
+        $this->validate([
+            'newTagName' => ['required', 'string', 'min:2', 'max:50'],
+        ], [
+            'newTagName.required' => 'Le nom de la compétence est obligatoire.',
+            'newTagName.min' => 'Le nom doit contenir au moins 2 caractères.',
+            'newTagName.max' => 'Le nom ne peut pas dépasser 50 caractères.',
+        ]);
+
+        $normalizedName = Str::title(trim($this->newTagName));
+
+        // Check if tag already exists (case-insensitive)
+        $existingTag = Tag::whereRaw('LOWER(name) = ?', [Str::lower($normalizedName)])->first();
+
+        if ($existingTag) {
+            // Select the existing tag if not already selected
+            if (! in_array($existingTag->id, $this->selectedTags)) {
+                $this->selectedTags[] = $existingTag->id;
+            }
+        } else {
+            // Create new tag
+            $tag = Tag::create(['name' => $normalizedName]);
+            $this->selectedTags[] = $tag->id;
+        }
+
+        $this->newTagName = '';
     }
 
     public function save(): void

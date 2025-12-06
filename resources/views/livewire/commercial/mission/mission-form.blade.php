@@ -53,6 +53,24 @@
             <label class="block text-sm font-semibold text-slate-900 mb-3">
                 {{ __('Compétences requises') }}
             </label>
+
+            {{-- Add new tag --}}
+            <div class="flex gap-2 mb-4">
+                <div class="flex-1">
+                    <input type="text" wire:model="newTagName" wire:keydown.enter.prevent="addTag"
+                        class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-[var(--theme-primary)] focus:ring-[var(--theme-primary)] text-slate-900 placeholder-slate-400 sm:text-sm"
+                        placeholder="Ajouter une nouvelle compétence..." />
+                    @error('newTagName')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+                <button type="button" wire:click="addTag"
+                    class="inline-flex items-center px-4 py-2 bg-[var(--theme-primary)] text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity">
+                    <x-heroicon-m-plus class="w-4 h-4 mr-1" />
+                    Ajouter
+                </button>
+            </div>
+
             <div class="flex flex-wrap gap-2">
                 @forelse($tags as $tag)
                     <button type="button" wire:click="toggleTag({{ $tag->id }})" @class([
@@ -60,14 +78,14 @@
                         'bg-[var(--theme-primary)] text-white shadow-md' => in_array($tag->id, $selectedTags),
                         'bg-white text-slate-700 hover:bg-slate-50 border border-slate-300' => !in_array($tag->id, $selectedTags),
                     ])>
-                        @if(in_array($tag->id, $selectedTags))
+                        @if (in_array($tag->id, $selectedTags))
                             <x-heroicon-m-check class="w-4 h-4 mr-1.5" />
                         @endif
                         {{ $tag->name }}
                     </button>
                 @empty
                     <p class="text-sm text-slate-500 italic">
-                        {{ __('Aucun tag disponible.') }}
+                        {{ __('Aucune compétence disponible. Ajoutez-en une ci-dessus.') }}
                     </p>
                 @endforelse
             </div>

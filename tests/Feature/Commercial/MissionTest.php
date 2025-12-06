@@ -228,6 +228,80 @@ describe('MissionForm Component', function () {
             ->test(MissionForm::class, ['mission' => $mission])
             ->assertSet('selectedTags', $tags->pluck('id')->toArray());
     });
+
+    it('can add a new tag', function () {
+        Livewire::actingAs($this->commercial)
+            ->test(MissionForm::class)
+            ->set('newTagName', 'Rust')
+            ->call('addTag')
+            ->assertSet('newTagName', '');
+
+        $this->assertDatabaseHas('tags', ['name' => 'Rust']);
+    });
+
+    it('auto-selects the new tag when created', function () {
+        Livewire::actingAs($this->commercial)
+            ->test(MissionForm::class)
+            ->set('newTagName', 'Kotlin')
+            ->call('addTag');
+
+        $tag = Tag::where('name', 'Kotlin')->first();
+        expect($tag)->not->toBeNull();
+
+        Livewire::actingAs($this->commercial)
+            ->test(MissionForm::class)
+            ->set('newTagName', 'Kotlin')
+            ->call('addTag')
+            ->assertSet('selectedTags', fn ($selectedTags) => in_array($tag->id, $selectedTags));
+    });
+
+    it('selects existing tag if name already exists', function () {
+        $existingTag = Tag::factory()->create(['name' => 'Python']);
+
+        Livewire::actingAs($this->commercial)
+            ->test(MissionForm::class)
+            ->set('newTagName', 'python') // lowercase
+            ->call('addTag')
+            ->assertSet('selectedTags', [$existingTag->id]);
+
+        // Should not create a duplicate (case-insensitive check)
+        expect(Tag::whereRaw('LOWER(name) = ?', ['python'])->count())->toBe(1);
+    });
+
+    it('validates new tag name is required', function () {
+        Livewire::actingAs($this->commercial)
+            ->test(MissionForm::class)
+            ->set('newTagName', '')
+            ->call('addTag')
+            ->assertHasErrors(['newTagName']);
+    });
+
+    it('validates new tag name minimum length', function () {
+        Livewire::actingAs($this->commercial)
+            ->test(MissionForm::class)
+            ->set('newTagName', 'A')
+            ->call('addTag')
+            ->assertHasErrors(['newTagName']);
+    });
+
+    it('can create mission with new tag', function () {
+        Livewire::actingAs($this->commercial)
+            ->test(MissionForm::class)
+            ->set('title', 'New Mission')
+            ->set('description', 'Mission description')
+            ->set('location', 'Paris')
+            ->set('newTagName', 'GraphQL')
+            ->call('addTag')
+            ->call('save')
+            ->assertRedirect(route('commercial.missions.index'));
+
+        // Tag name is normalized to Title Case
+        $tag = Tag::where('name', 'Graphql')->first();
+        $mission = Mission::where('title', 'New Mission')->first();
+
+        expect($tag)->not->toBeNull();
+        expect($mission->tags->pluck('id')->toArray())->toContain($tag->id);
+    });
 });
 
 describe('MissionShow Component', function () {
