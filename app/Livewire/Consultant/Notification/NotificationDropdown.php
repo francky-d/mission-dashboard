@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Consultant\Notification;
 
+use App\Notifications\ApplicationStatusChanged;
+use App\Notifications\NewMessageReceived;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -19,6 +21,31 @@ class NotificationDropdown extends Component
     public function close(): void
     {
         $this->isOpen = false;
+    }
+
+    public function goToNotification(string $notificationId): void
+    {
+        $notification = Auth::user()->notifications()->find($notificationId);
+
+        if (! $notification) {
+            return;
+        }
+
+        // Marquer comme lu
+        $notification->markAsRead();
+
+        // Rediriger selon le type de notification
+        $url = match ($notification->type) {
+            NewMessageReceived::class => route('consultant.messages.index', [
+                'user' => $notification->data['sender_id'] ?? null,
+            ]),
+            ApplicationStatusChanged::class => route('consultant.applications.index'),
+            default => null,
+        };
+
+        if ($url) {
+            $this->redirect($url, navigate: true);
+        }
     }
 
     public function markAsRead(string $notificationId): void

@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Actions\Logout;
+use App\Models\Message;
 use Livewire\Volt\Component;
 
 new class extends Component
@@ -13,6 +14,20 @@ new class extends Component
         $logout();
 
         $this->redirect('/', navigate: true);
+    }
+
+    /**
+     * Get unread messages count for the current user.
+     */
+    public function getUnreadMessagesCountProperty(): int
+    {
+        if (! auth()->check()) {
+            return 0;
+        }
+
+        return Message::where('receiver_id', auth()->id())
+            ->whereNull('read_at')
+            ->count();
     }
 }; ?>
 
@@ -55,6 +70,12 @@ new class extends Component
                                 class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('commercial.messages.*') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
                                 <x-heroicon-o-chat-bubble-left-right class="w-4 h-4 mr-2" />
                                 {{ __('Messages') }}
+                                @if($this->unreadMessagesCount > 0)
+                                    <span
+                                        class="ml-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                                        {{ $this->unreadMessagesCount > 9 ? '9+' : $this->unreadMessagesCount }}
+                                    </span>
+                                @endif
                             </a>
                         @else
                             <a href="{{ route('consultant.dashboard') }}" wire:navigate
@@ -76,6 +97,12 @@ new class extends Component
                                 class="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 border-b-2 {{ request()->routeIs('consultant.messages.*') ? 'nav-active border-current' : 'border-transparent text-gray-600 hover:text-gray-900' }}">
                                 <x-heroicon-o-chat-bubble-left-right class="w-4 h-4 mr-2" />
                                 {{ __('Messages') }}
+                                @if($this->unreadMessagesCount > 0)
+                                    <span
+                                        class="ml-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                                        {{ $this->unreadMessagesCount > 9 ? '9+' : $this->unreadMessagesCount }}
+                                    </span>
+                                @endif
                             </a>
                         @endif
                     @else
@@ -170,9 +197,15 @@ new class extends Component
                         {{ __('Missions') }}
                     </a>
                     <a href="{{ route('commercial.messages.index') }}" wire:navigate
-                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('commercial.messages.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        class="relative flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('commercial.messages.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
                         <x-heroicon-o-chat-bubble-left-right class="w-5 h-5" />
                         {{ __('Messages') }}
+                        @if($this->unreadMessagesCount > 0)
+                            <span
+                                class="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm leading-none">
+                                {{ $this->unreadMessagesCount > 9 ? '9+' : $this->unreadMessagesCount }}
+                            </span>
+                        @endif
                     </a>
                 @else
                     <a href="{{ route('consultant.dashboard') }}" wire:navigate
@@ -191,9 +224,15 @@ new class extends Component
                         {{ __('Candidatures') }}
                     </a>
                     <a href="{{ route('consultant.messages.index') }}" wire:navigate
-                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('consultant.messages.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
+                        class="relative flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('consultant.messages.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50' }}">
                         <x-heroicon-o-chat-bubble-left-right class="w-5 h-5" />
                         {{ __('Messages') }}
+                        @if($this->unreadMessagesCount > 0)
+                            <span
+                                class="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm leading-none">
+                                {{ $this->unreadMessagesCount > 9 ? '9+' : $this->unreadMessagesCount }}
+                            </span>
+                        @endif
                     </a>
                 @endif
             @else

@@ -37,7 +37,8 @@
         <div class="max-h-96 overflow-y-auto">
             @forelse ($this->notifications as $notification)
                 <div wire:key="notification-{{ $notification->id }}"
-                    class="border-b border-slate-100 px-4 py-3 hover:bg-slate-50 transition-colors {{ is_null($notification->read_at) ? 'bg-[var(--theme-primary)]/5' : '' }}">
+                    wire:click="goToNotification('{{ $notification->id }}')"
+                    class="border-b border-slate-100 px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer {{ is_null($notification->read_at) ? 'bg-[var(--theme-primary)]/5' : '' }}">
                     <div class="flex items-start justify-between">
                         <div class="flex-1">
                             {{-- Icône notification --}}
