@@ -43,7 +43,7 @@ class MissionShow extends Component
 
     public function showConsultantProfile(int $consultantId): void
     {
-        $this->selectedConsultant = User::with(['consultantProfile', 'tags'])->find($consultantId);
+        $this->selectedConsultant = User::with(['consultantProfile.tags'])->find($consultantId);
         $this->showProfileModal = true;
     }
 
