@@ -1,14 +1,13 @@
 <div class="space-y-8">
     {{-- Welcome Banner --}}
-    <div class="card-themed p-6 sm:p-8"
-        style="background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);">
+    <div class="card-themed p-6 sm:p-8" style="background-color: var(--theme-primary);">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div class="text-white">
                 <h1 class="text-2xl font-bold">Bonjour, {{ auth()->user()->name }} 👋</h1>
                 <p class="mt-1 text-white/80">Découvrez les nouvelles opportunités de mission</p>
             </div>
             <a href="{{ route('consultant.missions.index') }}" wire:navigate
-                class="btn-secondary bg-white border-white text-white hover:bg-white/10">
+                class="inline-flex items-center px-5 py-2.5 bg-white text-[var(--theme-primary)] font-semibold rounded-lg shadow-sm hover:bg-white/90 transition-colors">
                 <x-heroicon-o-magnifying-glass class="w-4 h-4 mr-2" />
                 Explorer les missions
             </a>

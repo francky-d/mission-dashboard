@@ -1,14 +1,13 @@
 <div class="space-y-8">
     {{-- Welcome Banner --}}
-    <div class="card-themed p-6 sm:p-8"
-        style="background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);">
+    <div class="card-themed p-6 sm:p-8" style="background-color: var(--theme-primary);">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div class="text-white">
                 <h1 class="text-2xl font-bold">Bonjour, {{ auth()->user()->name }} 👋</h1>
                 <p class="mt-1 text-white/80">Gérez vos missions et suivez vos candidatures</p>
             </div>
             <a href="{{ route('commercial.missions.create') }}" wire:navigate
-                class="btn-secondary bg-white border-white text-white hover:bg-white/10">
+                class="inline-flex items-center px-5 py-2.5 bg-white text-[var(--theme-primary)] font-semibold rounded-lg shadow-sm hover:bg-white/90 transition-colors">
                 <x-heroicon-o-plus class="w-4 h-4 mr-2" />
                 Créer une mission
             </a>
@@ -67,7 +66,7 @@
                 @else
                     <div class="space-y-4">
                         @foreach($recentApplications as $application)
-                            <div
+                            <a href="{{ route('commercial.missions.show', $application->mission) }}" wire:navigate
                                 class="flex items-center gap-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
                                 <div class="avatar">
                                     {{ strtoupper(substr($application->consultant->name, 0, 1)) }}
@@ -85,7 +84,7 @@
                                 ])>
                                     {{ $application->status->label() }}
                                 </span>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
                 @endif
