@@ -16,37 +16,41 @@
 
     {{-- Stats Cards --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div class="stat-card">
+        <a href="{{ route('commercial.missions.index') }}" wire:navigate
+            class="stat-card hover:shadow-lg transition-shadow cursor-pointer">
             <div class="stat-icon">
                 <x-heroicon-o-briefcase class="w-6 h-6" />
             </div>
             <div class="stat-value">{{ $totalMissions }}</div>
             <div class="stat-label">Total missions</div>
-        </div>
+        </a>
 
-        <div class="stat-card">
+        <a href="{{ route('commercial.missions.index', ['status' => 'active']) }}" wire:navigate
+            class="stat-card hover:shadow-lg transition-shadow cursor-pointer">
             <div class="stat-icon">
                 <x-heroicon-o-check-badge class="w-6 h-6" />
             </div>
             <div class="stat-value">{{ $activeMissions }}</div>
             <div class="stat-label">Missions actives</div>
-        </div>
+        </a>
 
-        <div class="stat-card">
+        <a href="{{ route('commercial.missions.index') }}" wire:navigate
+            class="stat-card hover:shadow-lg transition-shadow cursor-pointer">
             <div class="stat-icon">
                 <x-heroicon-o-clock class="w-6 h-6" />
             </div>
             <div class="stat-value">{{ $pendingApplications }}</div>
             <div class="stat-label">Candidatures en attente</div>
-        </div>
+        </a>
 
-        <div class="stat-card">
+        <a href="{{ route('commercial.missions.index') }}" wire:navigate
+            class="stat-card hover:shadow-lg transition-shadow cursor-pointer">
             <div class="stat-icon">
                 <x-heroicon-o-users class="w-6 h-6" />
             </div>
             <div class="stat-value">{{ $totalApplications }}</div>
             <div class="stat-label">Total candidatures</div>
-        </div>
+        </a>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -16,37 +16,37 @@
 
     {{-- Stats Cards --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div class="stat-card">
+        <a href="{{ route('consultant.missions.index') }}" wire:navigate class="stat-card hover:shadow-lg transition-shadow cursor-pointer">
             <div class="stat-icon">
                 <x-heroicon-o-briefcase class="w-6 h-6" />
             </div>
             <div class="stat-value">{{ $availableMissions }}</div>
             <div class="stat-label">Missions disponibles</div>
-        </div>
+        </a>
 
-        <div class="stat-card">
+        <a href="{{ route('consultant.applications.index') }}" wire:navigate class="stat-card hover:shadow-lg transition-shadow cursor-pointer">
             <div class="stat-icon">
                 <x-heroicon-o-document-text class="w-6 h-6" />
             </div>
             <div class="stat-value">{{ $myApplications }}</div>
             <div class="stat-label">Mes candidatures</div>
-        </div>
+        </a>
 
-        <div class="stat-card">
+        <a href="{{ route('consultant.applications.index', ['status' => 'pending']) }}" wire:navigate class="stat-card hover:shadow-lg transition-shadow cursor-pointer">
             <div class="stat-icon">
                 <x-heroicon-o-clock class="w-6 h-6" />
             </div>
             <div class="stat-value">{{ $pendingApplications }}</div>
             <div class="stat-label">En attente</div>
-        </div>
+        </a>
 
-        <div class="stat-card">
+        <a href="{{ route('consultant.applications.index', ['status' => 'accepted']) }}" wire:navigate class="stat-card hover:shadow-lg transition-shadow cursor-pointer">
             <div class="stat-icon">
                 <x-heroicon-o-check-circle class="w-6 h-6" />
             </div>
             <div class="stat-value">{{ $acceptedApplications }}</div>
             <div class="stat-label">Acceptées</div>
-        </div>
+        </a>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
