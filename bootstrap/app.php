@@ -4,6 +4,7 @@ use App\Http\Middleware\CheckUserSuspended;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureUserIsCommercial;
 use App\Http\Middleware\EnsureUserIsConsultant;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -29,9 +30,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'commercial' => EnsureUserIsCommercial::class,
             'admin' => EnsureUserIsAdmin::class,
             'suspended' => CheckUserSuspended::class,
+            'locale' => SetLocale::class,
         ]);
 
         $middleware->appendToGroup('web', [
+            SetLocale::class,
             CheckUserSuspended::class,
         ]);
     })

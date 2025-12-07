@@ -44,6 +44,7 @@ class ManageSiteSettings extends Page implements HasForms
         $this->form->fill([
             'site_name' => $settings->site_name,
             'logo_path' => $settings->logo_path,
+            'locale' => $settings->locale ?? 'fr',
             'consultant_primary_color' => $settings->consultant_primary_color,
             'consultant_secondary_color' => $settings->consultant_secondary_color,
             'consultant_accent_color' => $settings->consultant_accent_color,
@@ -72,6 +73,17 @@ class ManageSiteSettings extends Page implements HasForms
                             ->imagePreviewHeight('100')
                             ->maxSize(2048)
                             ->helperText('Format recommandé : PNG ou SVG, max 2 Mo'),
+                    ]),
+
+                Section::make('Langue de l\'interface')
+                    ->description('Configurez la langue par défaut de l\'application')
+                    ->schema([
+                        Select::make('locale')
+                            ->label('Langue')
+                            ->options(SiteSettings::availableLocales())
+                            ->required()
+                            ->native(false)
+                            ->helperText('Cette langue sera utilisée pour toute l\'interface et les emails'),
                     ]),
 
                 Section::make('Thème Consultant')

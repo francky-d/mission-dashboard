@@ -15,6 +15,7 @@ class SiteSettings extends Model
     protected $fillable = [
         'site_name',
         'logo_path',
+        'locale',
         'consultant_primary_color',
         'consultant_secondary_color',
         'consultant_accent_color',
@@ -22,6 +23,19 @@ class SiteSettings extends Model
         'commercial_secondary_color',
         'commercial_accent_color',
     ];
+
+    /**
+     * Available locales for the application.
+     *
+     * @return array<string, string>
+     */
+    public static function availableLocales(): array
+    {
+        return [
+            'fr' => 'Français',
+            'en' => 'English',
+        ];
+    }
 
     /**
      * Get default colors for themes.
