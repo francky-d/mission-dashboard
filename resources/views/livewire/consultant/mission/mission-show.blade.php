@@ -111,7 +111,7 @@
                     {{ __('Contact') }}
                 </h2>
                 <div class="flex items-center">
-                    <div class="h-14 w-14 rounded-full bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] flex items-center justify-center ring-4 ring-slate-100">
+                    <div class="h-14 w-14 rounded-full flex items-center justify-center ring-4 ring-slate-100" style="background-color: var(--theme-primary);">
                         <span class="text-lg font-bold text-white">
                             {{ strtoupper(substr($mission->commercial->name, 0, 2)) }}
                         </span>

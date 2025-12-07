@@ -9,8 +9,8 @@
         @forelse($conversations as $conversation)
             <button type="button" wire:click="selectConversation({{ $conversation->user->id }})"
                 class="flex w-full items-center gap-3 border-b border-slate-100 p-4 text-left transition hover:bg-slate-50 {{ $selectedUserId === $conversation->user->id ? 'bg-[var(--theme-primary)]/5 border-l-4 border-l-[var(--theme-primary)]' : '' }}">
-                <div
-                    class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] shadow-sm">
+                <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full shadow-sm"
+                    style="background-color: var(--theme-primary);">
                     <span class="text-sm font-bold text-white">
                         {{ strtoupper(substr($conversation->user->name, 0, 2)) }}
                     </span>

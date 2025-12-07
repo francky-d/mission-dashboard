@@ -134,7 +134,7 @@
                                                         class="w-14 h-14 rounded-full object-cover ring-2 ring-slate-100"
                                                     />
                                                 @else
-                                                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] flex items-center justify-center ring-2 ring-slate-100">
+                                                    <div class="w-14 h-14 rounded-full flex items-center justify-center ring-2 ring-slate-100" style="background-color: var(--theme-primary);">
                                                         <span class="text-lg font-bold text-white">
                                                             {{ strtoupper(substr($application->consultant->name, 0, 2)) }}
                                                         </span>
@@ -256,7 +256,7 @@
                 {{-- Contenu modal --}}
                 <div class="relative inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
                     {{-- Header --}}
-                    <div class="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-secondary)] px-6 py-5">
+                    <div style="background-color: var(--theme-primary);" class="px-6 py-5">
                         <div class="flex items-center justify-between">
                             <h3 class="text-xl font-bold text-white" id="modal-title">
                                 {{ __('Profil du consultant') }}
@@ -283,7 +283,7 @@
                                         class="w-28 h-28 rounded-2xl object-cover mx-auto sm:mx-0 shadow-lg ring-4 ring-slate-100"
                                     />
                                 @else
-                                    <div class="w-28 h-28 rounded-2xl bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] flex items-center justify-center mx-auto sm:mx-0 shadow-lg ring-4 ring-slate-100">
+                                    <div class="w-28 h-28 rounded-2xl flex items-center justify-center mx-auto sm:mx-0 shadow-lg ring-4 ring-slate-100" style="background-color: var(--theme-primary);">
                                         <span class="text-3xl font-bold text-white">
                                             {{ strtoupper(substr($selectedConsultant->name, 0, 2)) }}
                                         </span>

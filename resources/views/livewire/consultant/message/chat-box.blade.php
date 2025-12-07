@@ -2,8 +2,8 @@
     @if($this->receiver)
         {{-- Header --}}
         <div class="flex items-center gap-3 border-b border-slate-200 p-4 bg-white">
-            <div
-                class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] shadow-sm">
+            <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full shadow-sm"
+                style="background-color: var(--theme-primary);">
                 <span class="text-sm font-bold text-white">
                     {{ strtoupper(substr($this->receiver->name, 0, 2)) }}
                 </span>

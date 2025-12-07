@@ -16,8 +16,8 @@
             <div class="p-6 sm:p-8">
                 <div class="flex items-start gap-6">
                     {{-- Avatar --}}
-                    <div
-                        class="h-20 w-20 rounded-2xl bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] flex items-center justify-center flex-shrink-0 shadow-lg ring-4 ring-slate-100">
+                    <div class="h-20 w-20 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg ring-4 ring-slate-100"
+                        style="background-color: var(--theme-primary);">
                         <span class="text-3xl font-bold text-white">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </span>

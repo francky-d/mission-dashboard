@@ -55,9 +55,8 @@
             }
 
             .gradient-border {
-                background: linear-gradient(white, white) padding-box,
-                    linear-gradient(135deg, var(--theme-primary), var(--theme-accent)) border-box;
-                border: 2px solid transparent;
+                background: white;
+                border: 2px solid var(--theme-primary);
             }
         </style>
     @endisset
@@ -68,8 +67,7 @@
         {{-- Themed layout for role-specific auth --}}
         <div class="min-h-screen flex">
             {{-- Left side - Branding --}}
-            <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden"
-                style="background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);">
+            <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden" style="background-color: var(--theme-primary);">
 
                 {{-- Animated background shapes --}}
                 <div class="absolute inset-0">
@@ -206,7 +204,7 @@
                 </div>
 
                 {{-- Bottom gradient --}}
-                <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 w-full h-32" style="background-color: rgba(0,0,0,0.1);"></div>
             </div>
 
             {{-- Right side - Form --}}
@@ -221,7 +219,7 @@
                             @else
                                 <div class="flex items-center justify-center gap-2" style="color: var(--theme-primary);">
                                     <div class="w-10 h-10 rounded-xl flex items-center justify-center"
-                                        style="background: linear-gradient(135deg, var(--theme-primary), var(--theme-accent));">
+                                        style="background-color: var(--theme-primary);">
                                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -259,8 +257,7 @@
         </div>
     @else
         {{-- Default layout --}}
-        <div
-            class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-slate-100 to-slate-200">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-100">
             <div class="mb-6">
                 <a href="/" wire:navigate class="group">
                     @if($siteSettings->logo_url)
@@ -268,8 +265,8 @@
                             class="h-16 w-auto group-hover:scale-105 transition-transform">
                     @else
                         <div class="flex items-center gap-3 group-hover:scale-105 transition-transform">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-orange-500 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+                                style="background-color: var(--theme-primary, #3b82f6);">
                                 <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13 10V3L4 14h7v7l9-11h-7z" />
