@@ -1,5 +1,7 @@
 # Mission Dashboard
 
+> 🤖 **Note:** This project was vibe coded with the help of AI.
+
 A modern internal portal for **Digital Services Companies (ESN/IT Consulting firms)** to streamline mission management and talent allocation. Think of it as a mini LinkedIn for your organization, connecting consultants with commercial teams.
 
 ## 🎯 Overview

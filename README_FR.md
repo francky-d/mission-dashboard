@@ -1,5 +1,7 @@
 # Mission Dashboard
 
+> 🤖 **Note :** Ce projet a été vibe codé à l'aide d'une IA.
+
 Un portail interne moderne pour les **ESN (Entreprises de Services du Numérique)** afin de simplifier la gestion des missions et l'allocation des talents. Imaginez un mini LinkedIn pour votre organisation, connectant les consultants avec les équipes commerciales.
 
 ## 🎯 Présentation
