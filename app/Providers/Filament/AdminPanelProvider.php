@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Widgets\LatestApplications;
 use App\Filament\Widgets\MissionsChart;
 use App\Filament\Widgets\StatsOverview;
+use App\Models\SiteSettings;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -28,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandName(fn () => SiteSettings::instance()->site_name ?? config('app.name'))
             ->login()
             ->colors([
                 'primary' => Color::Amber,
