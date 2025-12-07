@@ -1,0 +1,25 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/
+
+    # Level 4 - can be increased progressively
+    level: 4
+
+    # Treat PHPDoc types as uncertain (avoids false positives with Enums)
+    treatPhpDocTypesAsCertain: false
+
+    # Ignore specific errors
+    ignoreErrors:
+        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$#'
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::#'
+        - '#Access to an undefined property App\\Livewire\\#'
+        - '#Access to an undefined property App\\Filament\\#'
+        - '#nullsafe property access#'
+    reportUnmatchedIgnoredErrors: false
+
+    # Laravel specific settings
+    checkModelProperties: false
+    checkOctaneCompatibility: true
