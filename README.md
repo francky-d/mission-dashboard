@@ -18,6 +18,8 @@ Managing missions and talents in a digital services company is often complex. Co
 - **Real-time Messaging** — Built-in messaging system for quick exchanges between consultants and commercial teams
 - **Admin Dashboard** — Complete oversight with user management, tags, missions, and activity statistics
 
+![Home Page](docs/images/home.png)
+
 ---
 
 ## 👥 Platform Actors

@@ -18,6 +18,8 @@ La gestion des missions et des talents dans une entreprise de services numériqu
 - **Messagerie en temps réel** — Système de messagerie intégré pour des échanges rapides entre consultants et commerciaux
 - **Tableau de bord administrateur** — Supervision complète avec gestion des utilisateurs, tags, missions et statistiques d'activité
 
+![Page d'accueil](docs/images/home.png)
+
 ---
 
 ## 👥 Acteurs de la plateforme
