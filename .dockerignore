@@ -1,0 +1,65 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Development
+.env
+.env.local
+.env.*.local
+.phpunit.result.cache
+phpunit.xml
+.php-cs-fixer.cache
+.editorconfig
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Docker development
+compose.yaml
+docker-compose.yml
+docker-compose.override.yml
+
+# Laravel Sail
+vendor/laravel/sail
+
+# Node modules (rebuilt in Docker)
+node_modules
+
+# Build artifacts (rebuilt in Docker)
+public/build
+public/hot
+
+# Tests
+tests
+phpunit.xml
+.phpunit.result.cache
+coverage
+
+# Documentation
+README.md
+CHANGELOG.md
+docs
+*.md
+
+# Storage (mounted as volume)
+storage/app/*
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+!storage/app/.gitignore
+!storage/logs/.gitignore
+!storage/framework/.gitignore
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+
+# Misc
+*.log
+*.sql
+*.bak
+Makefile

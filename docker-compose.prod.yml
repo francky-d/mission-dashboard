@@ -1,0 +1,233 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mission-dashboard:latest
+    container_name: mission-dashboard-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-80}:80"
+    environment:
+      APP_NAME: "${APP_NAME:-Mission Dashboard}"
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: "${APP_URL:-http://localhost}"
+      APP_KEY: "${APP_KEY}"
+      APP_LOCALE: "${APP_LOCALE:-fr}"
+      APP_FALLBACK_LOCALE: "${APP_FALLBACK_LOCALE:-fr}"
+
+      LOG_CHANNEL: stderr
+      LOG_LEVEL: warning
+
+      DB_CONNECTION: pgsql
+      DB_HOST: pgsql
+      DB_PORT: 5432
+      DB_DATABASE: "${DB_DATABASE:-mission_dashboard}"
+      DB_USERNAME: "${DB_USERNAME:-mission_dashboard}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+
+      BROADCAST_CONNECTION: reverb
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-null}"
+
+      MAIL_MAILER: "${MAIL_MAILER:-smtp}"
+      MAIL_HOST: "${MAIL_HOST}"
+      MAIL_PORT: "${MAIL_PORT:-587}"
+      MAIL_USERNAME: "${MAIL_USERNAME}"
+      MAIL_PASSWORD: "${MAIL_PASSWORD}"
+      MAIL_ENCRYPTION: "${MAIL_ENCRYPTION:-tls}"
+      MAIL_FROM_ADDRESS: "${MAIL_FROM_ADDRESS}"
+      MAIL_FROM_NAME: "${MAIL_FROM_NAME:-Mission Dashboard}"
+
+      REVERB_APP_ID: "${REVERB_APP_ID:-mission-dashboard}"
+      REVERB_APP_KEY: "${REVERB_APP_KEY}"
+      REVERB_APP_SECRET: "${REVERB_APP_SECRET}"
+      REVERB_HOST: "${REVERB_HOST:-reverb}"
+      REVERB_PORT: "${REVERB_PORT:-8080}"
+      REVERB_SCHEME: "${REVERB_SCHEME:-http}"
+
+      VITE_REVERB_APP_KEY: "${REVERB_APP_KEY}"
+      VITE_REVERB_HOST: "${VITE_REVERB_HOST:-localhost}"
+      VITE_REVERB_PORT: "${VITE_REVERB_PORT:-8080}"
+      VITE_REVERB_SCHEME: "${VITE_REVERB_SCHEME:-http}"
+    volumes:
+      - app-storage:/var/www/html/storage/app
+      - app-logs:/var/www/html/storage/logs
+    networks:
+      - mission-network
+    depends_on:
+      pgsql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Queue Worker
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mission-dashboard:latest
+    container_name: mission-dashboard-queue
+    restart: unless-stopped
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: "${APP_KEY}"
+      DB_CONNECTION: pgsql
+      DB_HOST: pgsql
+      DB_PORT: 5432
+      DB_DATABASE: "${DB_DATABASE:-mission_dashboard}"
+      DB_USERNAME: "${DB_USERNAME:-mission_dashboard}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      CACHE_STORE: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-null}"
+    networks:
+      - mission-network
+    depends_on:
+      pgsql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Scheduler (Cron)
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mission-dashboard:latest
+    container_name: mission-dashboard-scheduler
+    restart: unless-stopped
+    command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: "${APP_KEY}"
+      DB_CONNECTION: pgsql
+      DB_HOST: pgsql
+      DB_PORT: 5432
+      DB_DATABASE: "${DB_DATABASE:-mission_dashboard}"
+      DB_USERNAME: "${DB_USERNAME:-mission_dashboard}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      CACHE_STORE: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-null}"
+    networks:
+      - mission-network
+    depends_on:
+      pgsql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Laravel Reverb (WebSocket Server)
+  reverb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mission-dashboard:latest
+    container_name: mission-dashboard-reverb
+    restart: unless-stopped
+    command: php artisan reverb:start --host=0.0.0.0 --port=8080
+    ports:
+      - "${REVERB_PORT:-8080}:8080"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: "${APP_KEY}"
+      DB_CONNECTION: pgsql
+      DB_HOST: pgsql
+      DB_PORT: 5432
+      DB_DATABASE: "${DB_DATABASE:-mission_dashboard}"
+      DB_USERNAME: "${DB_USERNAME:-mission_dashboard}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      CACHE_STORE: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-null}"
+      REVERB_APP_ID: "${REVERB_APP_ID:-mission-dashboard}"
+      REVERB_APP_KEY: "${REVERB_APP_KEY}"
+      REVERB_APP_SECRET: "${REVERB_APP_SECRET}"
+    networks:
+      - mission-network
+    depends_on:
+      pgsql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # PostgreSQL Database
+  pgsql:
+    image: postgres:16-alpine
+    container_name: mission-dashboard-pgsql
+    restart: unless-stopped
+    ports:
+      - "${FORWARD_DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: "${DB_DATABASE:-mission_dashboard}"
+      POSTGRES_USER: "${DB_USERNAME:-mission_dashboard}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pgsql-data:/var/lib/postgresql/data
+    networks:
+      - mission-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USERNAME:-mission_dashboard} -d ${DB_DATABASE:-mission_dashboard}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Redis (Cache, Session, Queue)
+  redis:
+    image: redis:7-alpine
+    container_name: mission-dashboard-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes ${REDIS_PASSWORD:+--requirepass $REDIS_PASSWORD}
+    ports:
+      - "${FORWARD_REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - mission-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  mission-network:
+    driver: bridge
+
+volumes:
+  pgsql-data:
+    driver: local
+  redis-data:
+    driver: local
+  app-storage:
+    driver: local
+  app-logs:
+    driver: local
