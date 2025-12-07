@@ -1,0 +1,114 @@
+stages:
+  - lint
+  - analyze
+  - test
+
+variables:
+  PHP_VERSION: "8.4"
+  NODE_VERSION: "20"
+  POSTGRES_DB: testing
+  POSTGRES_USER: testing
+  POSTGRES_PASSWORD: testing
+  POSTGRES_HOST_AUTH_METHOD: trust
+
+# ===========================================
+# Cache configuration
+# ===========================================
+.composer-cache: &composer-cache
+  key:
+    files:
+      - composer.lock
+  paths:
+    - vendor/
+  policy: pull
+
+.npm-cache: &npm-cache
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+  policy: pull
+
+# ===========================================
+# Lint - Laravel Pint
+# ===========================================
+lint:
+  stage: lint
+  image: php:${PHP_VERSION}-cli-alpine
+  before_script:
+    - apk add --no-cache git unzip curl
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer install --prefer-dist --no-progress --no-interaction
+  script:
+    - vendor/bin/pint --test
+  cache:
+    <<: *composer-cache
+    policy: pull-push
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+
+# ===========================================
+# Static Analysis - PHPStan/Larastan
+# ===========================================
+static-analysis:
+  stage: analyze
+  image: php:${PHP_VERSION}-cli-alpine
+  before_script:
+    - apk add --no-cache git unzip curl
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer install --prefer-dist --no-progress --no-interaction
+    - cp .env.example .env
+    - php artisan key:generate
+  script:
+    - vendor/bin/phpstan analyse --memory-limit=2G
+  cache:
+    <<: *composer-cache
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+
+# ===========================================
+# Tests - Pest
+# ===========================================
+tests:
+  stage: test
+  image: php:${PHP_VERSION}-cli-alpine
+  services:
+    - name: postgres:16-alpine
+      alias: postgres
+    - name: redis:7-alpine
+      alias: redis
+  variables:
+    DB_CONNECTION: pgsql
+    DB_HOST: postgres
+    DB_PORT: 5432
+    DB_DATABASE: testing
+    DB_USERNAME: testing
+    DB_PASSWORD: testing
+    CACHE_DRIVER: redis
+    REDIS_HOST: redis
+    REDIS_PORT: 6379
+  before_script:
+    - apk add --no-cache git unzip curl nodejs npm postgresql-dev linux-headers $PHPIZE_DEPS
+    - docker-php-ext-install pdo pdo_pgsql
+    - pecl install redis && docker-php-ext-enable redis
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer install --prefer-dist --no-progress --no-interaction
+    - npm ci
+    - npm run build
+    - cp .env.example .env
+    - php artisan key:generate
+  script:
+    - vendor/bin/pest
+  cache:
+    - <<: *composer-cache
+    - <<: *npm-cache
+      policy: pull-push
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
