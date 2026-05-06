@@ -1,4 +1,4 @@
-# Mission Dashboard
+# Mission Dashboard (This app was vibecoded)
 
 > 🤖 **Note:** This project was vibe coded with the help of AI.
 
